@@ -24,33 +24,10 @@ hello world
 	}
 	var showfilelist=function(){
 		console.log('showfileslist is called');
-		console.log($('#fileselect')[0].files[0].name);
-		/*
-		G_files=$("#fileselect").files;
-		for(var i=0;i<G_files.length;i++){
-			filenamelist+=G_files[i]+'<br>';
-		}
-		console.log(filenamelist);
-		$('#flist').html(filenamelist);
-		*/
-
+		flist=$('#fileselect')[0].files[0].name;
+		console.log(flist);
+		$('#flist').html(flist);
 	}
-	$("#fileselect").bind("change",function(){
-		console.log('fileselect.bind is called');
-		G_files=this.files;
-		showFiles(G_files);
-	});
-	$("#fileselect").bind("click",function(){
-		console.log('fileselect.bind is called');
-		G_files=this.files;
-		showFiles(G_files);
-	});
-	$(document).ready(function(){
-		$("#hider").click(function(){
-			$(this).hide();
-		});
-	});
-
 </script>
 <p>
 	<INPUT type='button' name='button_name' value='button_value' onclick="showfilelist()">
@@ -62,20 +39,6 @@ hello world
 
 <input type='file' name='fileselect' multipe='mutiple' id='fileselect'>
 <input type='button' value='fileselect' onclick='$("#fileselect").click();'>
-
-<!--form method="POST" action="/api/v1/requesthandler">
-	<div>text:a<input type='file' name='fileselect' id='fileselect'></div>
-	<input type='button' value='fileselect' onclick='$("#fileselect").click();'>
-	<input type='submit' value='submit'>
-	<input type='reset' value='reset'>
-</form--!>
-
-<p id='hider'>hide me</p>
-<form method="GET" action="/api/v1/requesthandler">
-	<div>text:a<input type='text' name='text'></div>
-	<input type='submit' value='submit'>
-	<input type='reset' value='reset'>
-</form>
 
 </h1>
 </body>
