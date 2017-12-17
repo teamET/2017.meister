@@ -3,10 +3,7 @@ from contextlib import closing
 
 
 #pulse width  modulation data
-data={
-    'right':0,
-    'left':0
-    }
+#data={ 'right':0, 'left':0 }
 class Motor:
     last=[0,0,0,0]
     pi=pigpio.pi()
@@ -24,18 +21,16 @@ class Motor:
 
     def drive(self,port,target_rate):
         current_rate=self.acceleration(port,target_rate)
-        print('current',current_rate)
+        print('port',port,'target',target_rate,'current',current_rate)
         if self.last[port] * target_rate < 0:
             time.sleep(0.0001)
         if port is 0:
-            print('current',current_rate)
             self.drive_pin(14,15,current_rate)
         elif port is 1:
-#            drive_pin()
-            pass
+            self.drive_pin(23,24,current_rate)
         else:
-            pass
-        self.last[port]=target_rate
+            print('unknown port')
+        self.last[port]=current_rate
     def drive_pin(self,pin1,pin2,rate,BREAK=False):
         if rate > 0:
             self.pi.set_PWM_dutycycle(pin1,rate)
@@ -45,23 +40,25 @@ class Motor:
             self. pi.set_PWM_dutycycle(pin1,100)
             self.pi.set_PWM_dutycycle(pin2,100)
 
-def is_json(myjson):
-    try:
-        json_object = json.loads(myjson)
-    except ValueError as e:
-        return False
-    return True
 #sub  thread  UDP server
 class  SubUdpServer(threading.Thread):
-    def __init__(self):
+    def __init__(self,shared_data):
         super(SubUdpServer,self).__init__()
         self.UDP_IP=""
         self.UDP_PORT=5005
         self.backlog=10
         self.bufsize=1024
-
+        self.data=shared_data
+    def is_json(myjson):
+        try:
+            json_object = json.loads(myjson)
+        except ValueError as e:
+            return False
+        return True
     def run(self):
         print('===  Sub Thread Starts===')
+#        print('sub id',id(self.data))
+#        print('sub right',self.data["right"],'left',self.data["left"])
         sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         with closing(sock):
             sock.bind((self.UDP_IP,self.UDP_PORT))
@@ -72,24 +69,30 @@ class  SubUdpServer(threading.Thread):
                 if raw == 'q':
                     print('Sub process is terminated')
                     break
-                elif raw is not ''  and  is_json(raw) ==True:
-                    data=json.loads(raw)
-                    print('raw',raw,'data',data,'type',type(data),'dumps',json.dumps(data,indent=4))
-                    print('right',data["right"],'left',data["left"])
+                elif raw is not ''  and  self.is_json(raw) ==True:
+                    tmp=json.loads(raw)
+                    self.data['right']=tmp['right']
+                    self.data['left']=tmp['left']
                 else:
                     print('empty message or not json ')
+                print('Udp right',self.data["right"],'left',self.data["left"])
                 time.sleep(1)
 
 if __name__ == '__main__':
     motor=Motor([14,15])
-    server=SubUdpServer()
+    data={ 'right':9, 'left':0 }
+
+    #Udp Server setup
+    server=SubUdpServer(data)
     server.setDaemon(True)
     server.start()
     time.sleep(1)
     print('=== Main Thread  Starts ===')
+#    print('main id ',id(data))
     
     while True:
         time.sleep(1)
+        print('motor.drive right',data["right"],'left',data["left"])
         motor.drive(0,data['right'])
         motor.drive(1,data['left'])
 
