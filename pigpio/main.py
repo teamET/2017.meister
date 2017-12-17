@@ -1,6 +1,12 @@
-import pigpio,time
-import socket,requests,datetime,json
+import pigpio,time,socket,asyncore,requests,datetime,json,threading
+from contextlib import closing
 
+
+#pulse width  modulation data
+data={
+    'right':0,
+    'left':0
+    }
 class Motor:
     last=[0,0,0,0]
     pi=pigpio.pi()
@@ -39,27 +45,53 @@ class Motor:
             self. pi.set_PWM_dutycycle(pin1,100)
             self.pi.set_PWM_dutycycle(pin2,100)
 
-class Server:
-    UDP_IP=""
-    UDP_PORT=5005
-    sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-
+def is_json(myjson):
+    try:
+        json_object = json.loads(myjson)
+    except ValueError as e:
+        return False
+    return True
+#sub  thread  UDP server
+class  SubUdpServer(threading.Thread):
     def __init__(self):
-        self.sock.bind((self.UDP_IP,self.UDP_PORT))
+        super(SubUdpServer,self).__init__()
+        self.UDP_IP=""
+        self.UDP_PORT=5005
+        self.backlog=10
+        self.bufsize=1024
 
-    def read():
-        return val1,val2
+    def run(self):
+        print('===  Sub Thread Starts===')
+        sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+        with closing(sock):
+            sock.bind((self.UDP_IP,self.UDP_PORT))
+            while True:
+                mes=sock.recv(self.bufsize)
+                raw=mes.decode('utf-8')
+                print('mes',mes,'raw',raw)
+                if raw == 'q':
+                    print('Sub process is terminated')
+                    break
+                elif raw is not ''  and  is_json(raw) ==True:
+                    data=json.loads(raw)
+                    print('raw',raw,'data',data,'type',type(data),'dumps',json.dumps(data,indent=4))
+                    print('right',data["right"],'left',data["left"])
+                else:
+                    print('empty message or not json ')
+                time.sleep(1)
 
 if __name__ == '__main__':
     motor=Motor([14,15])
-    server=Server()
+    server=SubUdpServer()
+    server.setDaemon(True)
+    server.start()
+    time.sleep(1)
+    print('=== Main Thread  Starts ===')
+    
     while True:
-            raw_data,addr=server.sock.recvfrom(1024)
-            print("received",raw_data)
-            data=json.loads(raw_data.decode('utf-8'))
-            print('right %d left %d'%(data['right'],data['left']))
-            motor.drive(0,data['right'])
-            motor.drive(1,data['left'])
+        time.sleep(1)
+        motor.drive(0,data['right'])
+        motor.drive(1,data['left'])
 
 
 
