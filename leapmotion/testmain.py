@@ -66,7 +66,7 @@ def ConvertSP(speed):
         
 
 def Wait():
-    #–³ŒÀƒ‹[ƒv‚Ì•\Ž¦Š´Šo‚ð’x‚­‚·‚é
+    #ç„¡é™ãƒ«ãƒ¼ãƒ—ã®è¡¨ç¤ºæ„Ÿè¦šã‚’é…ãã™ã‚‹
     for num, i in enumerate(range(100)):
             sys.stdout.flush()
             time.sleep(0.01)
@@ -77,13 +77,13 @@ forward back
 
 max: -0.8,Min:0.8
 
-right : ‘Oi@left :@Œãi
+right : å‰é€²ã€€left :ã€€å¾Œé€²
 
         
 """
 
 def forward(pitch):
-    #‘Oi
+    #å‰é€²
     
     if pitch > 0.8 :
         print "STOP"
@@ -100,7 +100,7 @@ def forward(pitch):
 
 
 def back(pitch):
-    #Œãi
+    #å¾Œé€²
     if pitch > 0.8 :
         print "STOP"
         speed=-100
@@ -124,8 +124,6 @@ def main():
     controller.set_policy(Controller.POLICY_BACKGROUND_FRAMES)
     controller.set_policy(controller.POLICY_IMAGES)
     controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)
-    
-
     #Controller.set_policy
 
     pointable = frame.pointables.frontmost
