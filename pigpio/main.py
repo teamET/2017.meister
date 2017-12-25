@@ -1,10 +1,9 @@
-import pigpio,time,socket,asyncore,requests,datetime,json,threading
+import time,socket,asyncore,requests,datetime,json,threading
 from contextlib import closing
 
-
-#pulse width  modulation data
-#data={ 'right':0, 'left':0 }
+pins=[14,15,23,24]
 class Motor:
+    import pigpio
     last=[0,0,0,0]
     pi=pigpio.pi()
     def __init__(self,pins):
@@ -37,7 +36,7 @@ class Motor:
         elif rate <0:
             self.pi.ser_PWM_dutycycle(pin2.rate)
         elif BREAK is True:
-            self. pi.set_PWM_dutycycle(pin1,100)
+            self.pi.set_PWM_dutycycle(pin1,100)
             self.pi.set_PWM_dutycycle(pin2,100)
 
 #sub  thread  UDP server
@@ -49,16 +48,8 @@ class  SubUdpServer(threading.Thread):
         self.backlog=10
         self.bufsize=1024
         self.data=shared_data
-    def is_json(myjson):
-        try:
-            json_object = json.loads(myjson)
-        except ValueError as e:
-            return False
-        return True
     def run(self):
         print('===  Sub Thread Starts===')
-#        print('sub id',id(self.data))
-#        print('sub right',self.data["right"],'left',self.data["left"])
         sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         with closing(sock):
             sock.bind((self.UDP_IP,self.UDP_PORT))
@@ -66,21 +57,18 @@ class  SubUdpServer(threading.Thread):
                 mes=sock.recv(self.bufsize)
                 raw=mes.decode('utf-8')
                 print('mes',mes,'raw',raw)
-                if raw == 'q':
-                    print('Sub process is terminated')
-                    break
-                elif raw is not ''  and  self.is_json(raw) ==True:
+                try:
                     tmp=json.loads(raw)
-                    self.data['right']=tmp['right']
-                    self.data['left']=tmp['left']
+                except:
+                    print("not json")
                 else:
-                    print('empty message or not json ')
-                print('Udp right',self.data["right"],'left',self.data["left"])
-                time.sleep(1)
+					self.data["right"]=tmp.get("right",0)
+					self.data["left"]=tmp.get("left",0)
+                    print('Udp right',self.data["right"],'left',self.data["left"])
 
 if __name__ == '__main__':
     motor=Motor([14,15])
-    data={ 'right':9, 'left':0 }
+    data={ 'right':0, 'left':0 }
 
     #Udp Server setup
     server=SubUdpServer(data)
@@ -88,7 +76,6 @@ if __name__ == '__main__':
     server.start()
     time.sleep(1)
     print('=== Main Thread  Starts ===')
-#    print('main id ',id(data))
     
     while True:
         time.sleep(1)
