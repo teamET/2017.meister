@@ -1,4 +1,4 @@
-import time,socket,asyncore,requests,datetime,json,threading
+import time,socket,asyncore,requests,datetime,json,threading,subprocess
 from contextlib import closing
 
 pins=[14,15,23,24]
@@ -62,8 +62,10 @@ class  SubUdpServer(threading.Thread):
                 except:
                     print("not json")
                 else:
-					self.data["right"]=tmp.get("right",0)
-					self.data["left"]=tmp.get("left",0)
+					for key,value in tmp.iteritems():
+						seld.data[key]=value
+#					self.data["right"]=tmp.get("right",0)
+#					self.data["left"]=tmp.get("left",0)
                     print('Udp right',self.data["right"],'left',self.data["left"])
 
 if __name__ == '__main__':
@@ -76,12 +78,19 @@ if __name__ == '__main__':
     server.start()
     time.sleep(1)
     print('=== Main Thread  Starts ===')
+
+	#tkinter
+	root
     
     while True:
         time.sleep(1)
         print('motor.drive right',data["right"],'left',data["left"])
         motor.drive(0,data['right'])
         motor.drive(1,data['left'])
+		print("subp -> "+subprocess.run(data.get("command",":") ))
+
+
+		
 
 
 
