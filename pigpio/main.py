@@ -1,4 +1,5 @@
-import time,socket,asyncore,requests,datetime,json,threading,subprocess
+import time,socket,asyncore,requests,datetime,json,threading,
+import subprocess,logging
 from contextlib import closing
 
 pins=[14,15,23,24]
@@ -69,6 +70,7 @@ class  SubUdpServer(threading.Thread):
                     print('Udp right',self.data["right"],'left',self.data["left"])
 
 if __name__ == '__main__':
+	logging.basicConfig(filename=time.time()+'.log',level=logging.DEBUG)
     motor=Motor([14,15])
     data={ 'right':0, 'left':0 }
 
@@ -79,15 +81,13 @@ if __name__ == '__main__':
     time.sleep(1)
     print('=== Main Thread  Starts ===')
 
-	#tkinter
-	root
-    
+
     while True:
         time.sleep(1)
         print('motor.drive right',data["right"],'left',data["left"])
         motor.drive(0,data['right'])
         motor.drive(1,data['left'])
-		print("subp -> "+subprocess.run(data.get("command",":") ))
+		logging.info("subp -> "+subprocess.run(data.get("command",":") ))
 
 
 		
