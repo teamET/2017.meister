@@ -37,7 +37,7 @@ class Motor:
         elif rate <0:
             self.pi.ser_PWM_dutycycle(pin2.rate)
         elif BREAK is True:
-            self. pi.set_PWM_dutycycle(pin1,100)
+            self.pi.set_PWM_dutycycle(pin1,100)
             self.pi.set_PWM_dutycycle(pin2,100)
 
 #sub  thread  UDP server
@@ -58,7 +58,7 @@ class  SubUdpServer(threading.Thread):
     def run(self):
         print('===  Sub Thread Starts===')
 #        print('sub id',id(self.data))
-#        print('sub right',self.data["right"],'left',self.data["left"])
+        print('sub right',self.data["right"],'left',self.data["left"])
         sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         with closing(sock):
             sock.bind((self.UDP_IP,self.UDP_PORT))
@@ -69,7 +69,7 @@ class  SubUdpServer(threading.Thread):
                 if raw == 'q':
                     print('Sub process is terminated')
                     break
-                elif raw is not ''  and  self.is_json(raw) ==True:
+                elif raw is not '' : #and  self.is_json(raw) ==True:
                     tmp=json.loads(raw)
                     self.data['right']=tmp['right']
                     self.data['left']=tmp['left']
@@ -79,19 +79,19 @@ class  SubUdpServer(threading.Thread):
                 time.sleep(1)
 
 if __name__ == '__main__':
-    motor=Motor([14,15])
-    data={ 'right':9, 'left':0 }
+    motor=Motor([14,15,23,24])
+    data={ 'right':0, 'left':0 }
 
     #Udp Server setup
     server=SubUdpServer(data)
     server.setDaemon(True)
     server.start()
-    time.sleep(1)
+#    time.sleep(1)
     print('=== Main Thread  Starts ===')
 #    print('main id ',id(data))
     
     while True:
-        time.sleep(1)
+#        time.sleep(1)
         print('motor.drive right',data["right"],'left',data["left"])
         motor.drive(0,data['right'])
         motor.drive(1,data['left'])
