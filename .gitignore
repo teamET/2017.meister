@@ -1,2 +1,5 @@
 socket_thread.py
 __pycache__
+*.o
+*.out
+

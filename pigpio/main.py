@@ -1,6 +1,8 @@
-import pigpio,time,socket,asyncore,requests,datetime,json,threading
+import time,socket,asyncore,requests,datetime,json,threading,
+import subprocess,logging
 from contextlib import closing
 
+<<<<<<< HEAD
 pins=(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27)
 class LED:
     pi=pigpio.pi()
@@ -15,7 +17,11 @@ class LED:
 
 #pulse width  modulation data
 #data={ 'right':0, 'left':0 }
+=======
+pins=[14,15,23,24]
+>>>>>>> e25c69b92efb5d33c65f8284a235433d8fa3ab12
 class Motor:
+    import pigpio
     last=[0,0,0,0]
     pi=pigpio.pi()
     def __init__(self,pins):
@@ -60,17 +66,14 @@ class  SubUdpServer(threading.Thread):
         self.backlog=10
         self.bufsize=1024
         self.data=shared_data
-    def is_json(myjson):
-        try:
-            json_object = json.loads(myjson)
-        except ValueError as e:
-            return False
-        return True
     def run(self):
         print('===  Sub Thread Starts===')
+<<<<<<< HEAD
         print("PORT",self.UDP_PORT)
 #        print('sub id',id(self.data))
 #        print('sub right',self.data["right"],'left',self.data["left"])
+=======
+>>>>>>> e25c69b92efb5d33c65f8284a235433d8fa3ab12
         sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         with closing(sock):
             sock.bind((self.UDP_IP,self.UDP_PORT))
@@ -78,6 +81,7 @@ class  SubUdpServer(threading.Thread):
                 mes=sock.recv(self.bufsize)
                 raw=mes.decode('utf-8')
                 print('mes',mes,'raw',raw)
+<<<<<<< HEAD
                 if raw == 'q':
                     print('Sub process is terminated')
                     break
@@ -106,6 +110,23 @@ if __name__ == '__main__':
 #    for i in pins:
 #        led_pwm[i]=0
     led=LED()
+=======
+                try:
+                    tmp=json.loads(raw)
+                except:
+                    print("not json")
+                else:
+					for key,value in tmp.iteritems():
+						seld.data[key]=value
+#					self.data["right"]=tmp.get("right",0)
+#					self.data["left"]=tmp.get("left",0)
+                    print('Udp right',self.data["right"],'left',self.data["left"])
+
+if __name__ == '__main__':
+	logging.basicConfig(filename=time.time()+'.log',level=logging.DEBUG)
+    motor=Motor([14,15])
+    data={ 'right':0, 'left':0 }
+>>>>>>> e25c69b92efb5d33c65f8284a235433d8fa3ab12
 
     #Udp Server setup
 #    server=SubUdpServer(data)
@@ -114,9 +135,10 @@ if __name__ == '__main__':
     server.start()
 #    time.sleep(1)
     print('=== Main Thread  Starts ===')
-#    print('main id ',id(data))
-    
+
+
     while True:
+<<<<<<< HEAD
         print('led_pwm',led_pwm)
         led.up(led_pwm);
         """
@@ -127,6 +149,16 @@ if __name__ == '__main__':
 #        print('motor.drive right',data["right"],'left',data["left"])
 #        motor.drive(0,data['right'])
 #        motor.drive(1,data['left'])
+=======
+        time.sleep(1)
+        print('motor.drive right',data["right"],'left',data["left"])
+        motor.drive(0,data['right'])
+        motor.drive(1,data['left'])
+		logging.info("subp -> "+subprocess.run(data.get("command",":") ))
+
+
+		
+>>>>>>> e25c69b92efb5d33c65f8284a235433d8fa3ab12
 
 
 
