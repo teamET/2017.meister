@@ -1,4 +1,5 @@
 import os, sys, inspect,time
+from time import sleep
 
 
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
@@ -17,6 +18,7 @@ UDP_IP="192.168.137.132"
 UDP_PORT=5005
 
 FrameCount=0
+FrameCheck=0
 SwipeCount=0
 StrC=0
 def is_json(myjson):
@@ -40,12 +42,16 @@ class SampleListener(Leap.Listener):
         
     def on_frame(self,controller):
         global FrameCount
+        global FrameCheck
         global SwipeCount
-        FrameCount+=1
         frame=controller.frame()
         hand = frame.hands.rightmost
-        if (FrameCount>5000):
+        if(FrameCheck is 1 ):
+            FrameCount+=1
+        if(FrameCount > 50):
             FrameCount=0
+            FrameCheck=0
+        #print "t={}".format(FrameCount)
         #finger
         swipeck=0
         for finger in hand.fingers:
@@ -76,19 +82,13 @@ class SampleListener(Leap.Listener):
                 swipeck=1
                 swipper = swipe.pointable
         
-        if (swipeck is 1):
-            print "swipe/v={0}
-            ".format(velocity)
-            
-def Wait():
-    
-    #無限ループの表示感覚を遅くする
-    for num, i in enumerate(range(100)):
-            sys.stdout.flush()
-            time.sleep(0.01)
-            
+        if (swipeck is 1):              
+            print "swipe"
+            swipeCheck=1
+            sleep(1) #chattering eliminat
 
-#Qdef menu(FrameCount):
+        if(swipeCheck is 1):
+            Swipe()     
 
 def main():
     listener=SampleListener()
