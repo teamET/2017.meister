@@ -1,11 +1,6 @@
 import threading,time
 
-"""
-http://momijiame.tumblr.com/post/38149309923/python-%E3%81%AE-threadingthread-%E3%82%92%E8%A9%A6%E3%81%97%E3%81%A6%E3%81%BF%E3%82%8B
-
-
-"""
-
+#when you want to update color of led ,you should change this list like main()
 led_status=[i for i in range(25)]
 
 class viewer(threading.Thread):
@@ -68,17 +63,17 @@ v=viewer()
 v.setDaemon(True)
 v.start()
 
-
-cnt=0
-while True:
-    led_status=[i*cnt for i in range(25)]
-    cnt+=1
-    if cnt>9:
-        cnt=0
-    print("main thread")
-    time.sleep(0.01)
-
-
-
+def main():
+    cnt=0
+    global led_status
+    while True:
+        led_status=[i*cnt for i in range(25)]
+        cnt+=1
+        if cnt>9:
+            cnt=0
+        print("main thread")
+        time.sleep(0.01)
+if __name__  == '__main__':
+    main()
 
 
