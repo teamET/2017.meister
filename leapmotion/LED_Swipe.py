@@ -1,6 +1,6 @@
+
 import os, sys, inspect,time
 from time import sleep
-
 
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 arch_dir = 'lib/x64' if sys.maxsize > 2**32 else 'lib/x86'
@@ -17,10 +17,10 @@ UDP_IP="127.0.1.1"
 UDP_IP="192.168.137.132"
 UDP_PORT=5005
 
-FrameCount=0
-FrameCheck=0
-SwipeCount=0
-StrC=0
+current=0
+before =0
+p=0
+
 def is_json(myjson):
     try:
         json_object = json.loads(myjson)
@@ -36,28 +36,23 @@ def send(message):
 
 import Leap
 class SampleListener(Leap.Listener):
-    
+
     def on_connect(self,controller):
         print "connected"
         
     def on_frame(self,controller):
-        global FrameCount
-        global FrameCheck
-        global SwipeCount
         frame=controller.frame()
         hand = frame.hands.rightmost
-        if(FrameCheck is 1 ):
-            FrameCount+=1
-        if(FrameCount > 50):
-            FrameCount=0
-            FrameCheck=0
-        #print "t={}".format(FrameCount)
         #finger
         swipeck=0
+        global current
+        global before
+        global p
         for finger in hand.fingers:
             pointable = frame.pointables.frontmost
             direction = pointable.direction
             id = pointable.id
+
             
             length = pointable.length
             width = pointable.width
@@ -84,12 +79,32 @@ class SampleListener(Leap.Listener):
         
         if (swipeck is 1):              
             print "swipe"
-            swipeCheck=1
-            sleep(1) #chattering eliminat
+            current=1    
+            sleep(0.2) #chattering eliminat
+        else:
+            current=0
 
-        if(swipeCheck is 1):
-            Swipe()     
-
+        if current is 1 and before is 0:
+            if p is 0:
+                p=100
+            elif p is 100:
+                p=0
+        pwm=Led_All(p)
+        Led_Send(pwm)
+        
+def Led_All(p):
+    pwm=[p,p,p,p,p,p,p,p,p,p,
+         p,p,p,p,p,p,p,p,p,p,
+         p,p,p,p,p,p]
+    return pwm
+    
+def Led_Send(pwm):
+    print "pwm={}".format(pwm)
+    #LED SEND BEGIN
+    pwm_str=map(str,pwm)
+    mes=','.join(pwm_str)
+    #LED SEND END
+    
 def main():
     listener=SampleListener()
     controller=Leap.Controller()
