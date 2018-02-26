@@ -92,7 +92,7 @@ if __name__ == '__main__':
 #    motor=Motor([14,15,23,24])
 #    data={ 'right':0, 'left':0 }
 #    print("max pin number:",pins[:-1:])
-    led_pwm=[0 for i in range(28)]
+    led_pwm=[256 for i in range(28)]
 #    for i in pins:
 #        led_pwm[i]=0
     led=LED()
