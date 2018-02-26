@@ -58,6 +58,7 @@ check_gpio()
    then
       f=0
       tested+="$1 "
+      tested_t+="$1, "
 
       # write mode tests
       $(pigs w $1 0)
@@ -122,5 +123,6 @@ if [[ $failed = "" ]]; then failed="None"; fi
 
 echo "Skipped non-user gpios: $skipped"
 echo "Tested user gpios: $tested"
+echo "Tested user gpios tuple format: $tested_t"
 echo "Failed user gpios: $failed"
 
