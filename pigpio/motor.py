@@ -7,15 +7,16 @@ from contextlib import closing
 class Motor:
     last=[0,0,0,0]
     pi=pigpio.pi()
+    step=10
     def __init__(self,pins):
         print('initialized pin is ',pins)
         for pin in pins:
             self.pi.set_mode(pin,pigpio.OUTPUT)
     def acceleration(self,port,target):
         if target > self.last[port]:
-            return  self.last[port]+2
+            return  self.last[port]+self.step
         elif target < self.last[port]:
-            return self.last[port]-2
+            return self.last[port]-self.step
         else :
             return self.last[port]
 
@@ -32,13 +33,13 @@ class Motor:
             print('unknown port')
         self.last[port]=current_rate
     def drive_pin(self,pin1,pin2,rate,BREAK=False):
-        print("g",self.pi.get_PWM_dutycycle(14),self.pi.get_PWM_dutycycle(15))
+#        print("g",self.pi.get_PWM_dutycycle(14),self.pi.get_PWM_dutycycle(15))
         if rate > 0:
             self.pi.set_PWM_dutycycle(pin1,rate)
             self.pi.set_PWM_dutycycle(pin2,0)
         elif rate <0:
             self.pi.set_PWM_dutycycle(pin1,0)
-            self.pi.ser_PWM_dutycycle(pin2.rate)
+            self.pi.set_PWM_dutycycle(pin2,-rate)
         elif BREAK is True:
             self.pi.set_PWM_dutycycle(pin1,254)
             self.pi.set_PWM_dutycycle(pin2,254)
@@ -84,9 +85,21 @@ class  SubUdpServer(threading.Thread):
 if __name__ == '__main__':
     motor=Motor([14,15,23,24])
     while True:
-        print('motor.drive right')
-        motor.drive(0,254)
-        motor.drive(1,254)
+        motor.drive(0,250)
+        '''
+        for pwm in range(-254,254,20):
+            print('pwm up :',pwm)
+            motor.drive(0,pwm)
+            motor.drive(1,pwm)
+            time.sleep(0.1)
+        for pwm in range(254,-254,-20):
+            print('pwm down:',pwm)
+            motor.drive(0,pwm)
+            motor.drive(1,pwm)
+            time.sleep(0.1)
+            '''
+
+
 
 
 
