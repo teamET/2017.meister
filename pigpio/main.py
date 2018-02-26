@@ -88,33 +88,35 @@ class  SubUdpServer(threading.Thread):
                     print('empty message or not json ')
 #                time.sleep(1)
 
-if __name__ == '__main__':
-#    motor=Motor([14,15,23,24])
-#    data={ 'right':0, 'left':0 }
-#    print("max pin number:",pins[:-1:])
-    led_pwm=[0 for i in range(28)]
-#    for i in pins:
-#        led_pwm[i]=0
-    led=LED()
 
-    #Udp Server setup
-#    server=SubUdpServer(data)
-    server=SubUdpServer(led_pwm)
-    server.setDaemon(True)
-    server.start()
-#    time.sleep(1)
-    print('=== Main Thread  Starts ===')
-    
-    while True:
-        pass
-        '''
-        print('led_pwm',led_pwm)
-        led.up(led_pwm);
-        '''
-        """
-        for i in range(26):
-            led.up(i,led_pwm[i]);
+mode='__LED__'
+print("mode : ",mode)
+
+
+if __name__ == '__main__' :
+#Udp Server setup
+#server=SubUdpServer(data)
+
+    if mode == '__LED__':
+        led_pwm=[0 for i in range(28)]
+        led=LED()
+        server=SubUdpServer(led_pwm)
+        server.setDaemon(True)
+        server.start()
+        print('=== Main Thread  Starts ===')
+        while True:
+            pass
             """
+            for i in range(26):
+                led.up(i,led_pwm[i]);
+                """
+    elif mode =='__MOTOR__':
+        motor=Motor([14,15,23,24])
+        while True:
+            print('motor.drive right')
+            motor.drive(0,100)
+            motor.drive(1,100)
+
 
 
 
