@@ -22,20 +22,21 @@ class Motor:
             return self.last[port]
 
     def drive(self,port,target_rate):
-        self.current_rate[port]=self.acceleration(port,target_rate)
+#        self.current_rate[port]=self.acceleration(port,target_rate)
+        self.current_rate[port]=target_rate
         print('port',port,'target',target_rate,'current',self.current_rate[port])
         if self.last[port] * target_rate < 0:
             time.sleep(0.0001)
         self.drive_pin(port,self.current_rate[port])
         self.last[port]=self.current_rate[port]
     def drive_pin(self,port,rate,BREAK=False):
-        print('port:',port,'pin0,1:',self.pins[port],self.pins[0][0])
+        print('port:',port,'pin0,1:',self.pins[port],self.pins[0][0],self.pins[0][1],rate)
         if rate > 0:
             self.pi.set_PWM_dutycycle(self.pins[port][0],rate)
             self.pi.set_PWM_dutycycle(self.pins[port][1],0)
         elif rate <0:
             self.pi.set_PWM_dutycycle(self.pins[port][0],0)
-            self.pi.set_PWM_dutycycle(self.pins[port][1],rate)
+            self.pi.set_PWM_dutycycle(self.pins[port][1],-rate)
         elif BREAK is True:
             self.pi.set_PWM_dutycycle(self.pins[port][0],254)
             self.pi.set_PWM_dutycycle(self.pins[port][1],254)
@@ -82,19 +83,17 @@ class  SubUdpServer(threading.Thread):
 if __name__ == '__main__':
     motor=Motor([[14,15],[23,24],[8,7],[16,20]])
     while True:
-        motor.drive(0,250)
-        '''
+#       motor.drive(0,250)
         for pwm in range(-254,254,20):
             print('pwm up :',pwm)
             motor.drive(0,pwm)
             motor.drive(1,pwm)
-            time.sleep(0.1)
+            time.sleep(0.5)
         for pwm in range(254,-254,-20):
             print('pwm down:',pwm)
             motor.drive(0,pwm)
             motor.drive(1,pwm)
-            time.sleep(0.1)
-            '''
+            time.sleep(0.5)
 
 
 
