@@ -6,6 +6,7 @@ led_status=[i for i in range(25)]
 class viewer(threading.Thread):
     def __init__(self):
         import Tkinter
+        print("====== ",__name__," ====== ")
         print("====== init viewer thread ====== ")
         super(viewer,self).__init__()
         self.w=50
@@ -53,17 +54,18 @@ class viewer(threading.Thread):
         while True:
             #root.mainloop() is a substitute for update_idletasks() and update()
             self.root.update_idletasks()
-            print("sub thread run()")
+            print("sub thread run()",id(led_status))
             for i in range(25):
                 self.c.itemconfig(self.led_id[i],fill=self.color2hex([led_status[i]*10,0,0]))
                 time.sleep(0.01)
             self.root.update()
 
-v=viewer()
-v.setDaemon(True)
-v.start()
 
 def main():
+        
+    v=viewer()
+    v.setDaemon(True)
+    v.start()
     cnt=0
     global led_status
     while True:
