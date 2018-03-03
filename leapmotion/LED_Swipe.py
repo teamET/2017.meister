@@ -93,9 +93,9 @@ class SampleListener(Leap.Listener):
         Led_Send(pwm)
         
 def Led_All(p):
-    pwm=[p,p,p,p,p,p,p,p,p,p,
-         p,p,p,p,p,p,p,p,p,p,
-         p,p,p,p,p,p]
+    pwm=[p,p,p,
+         p,p,p
+         p,p,p]
     return pwm
     
 def Led_Send(pwm):

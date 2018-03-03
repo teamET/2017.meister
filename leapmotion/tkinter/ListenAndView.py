@@ -4,6 +4,7 @@ from time import sleep
 import socket,json
 #  UDP communication
 
+"""
 UDP_IP="127.0.1.1"
 UDP_IP="192.168.137.132" #raspberry pi ip address
 UDP_PORT=5005
@@ -14,14 +15,16 @@ sys.path.insert(0, os.path.abspath(os.path.join(src_dir, arch_dir)))
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 lib_dir = os.path.abspath(os.path.join(src_dir, 'lib'))
 sys.path.insert(0, lib_dir)
+"""
 #import Leap
 
 #when you want to update color of led ,you should change this list like main()
-led_status=[i for i in range(25)]
+#led_status=[i for i in range(25)]
 
 class viewer(threading.Thread):
     def __init__(self):
         import Tkinter
+        
         print("====== init viewer thread ====== ")
         super(viewer,self).__init__()
         self.w=50
@@ -74,7 +77,7 @@ class viewer(threading.Thread):
                 self.c.itemconfig(self.led_id[i],fill=self.color2hex([led_status[i]*10,0,0]))
                 time.sleep(0.01)
             self.root.update()
-
+'''
 #class SampleListener(Leap.Listener):
 class SimpleListener():
     def __init__(self):
@@ -123,4 +126,5 @@ def main():
         
 if __name__  == '__main__':
     main()
+    '''
 
