@@ -1,7 +1,10 @@
 import pigpio,time,socket,asyncore,requests,datetime,json,threading
 from contextlib import closing
 
-pins=(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27)
+#motor=Motor([[14,15],[23,24],[8,7],[16,20]])
+#pins=(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27)
+pins=(2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 18, 19, 20, 21, 22, 25, 26, 27)
+
 class LED:
     pi=pigpio.pi()
     def __init__(self):
@@ -13,40 +16,45 @@ class LED:
             self.pi.set_PWM_dutycycle(pin,pwm[pin])
 
 class Motor:
-    last=[0,0,0,0]
+    last=[0 for i in range(2)]
+    current_rate=[0 for i in range(2)]
     pi=pigpio.pi()
+    step=10
+    pins=[]
     def __init__(self,pins):
         print('initialized pin is ',pins)
-        for pin in pins:
-            self.pi.set_mode(pin,pigpio.OUTPUT)
+        self.pins=pins
+        for pins in self.pins:
+            for pin in pins:
+                self.pi.set_mode(pin,pigpio.OUTPUT)
     def acceleration(self,port,target):
         if target > self.last[port]:
-            return  self.last[port]+2
+            return  self.last[port]+self.step
         elif target < self.last[port]:
-            return self.last[port]-2
+            return self.last[port]-self.step
         else :
             return self.last[port]
 
     def drive(self,port,target_rate):
-        current_rate=self.acceleration(port,target_rate)
-        print('port',port,'target',target_rate,'current',current_rate)
+#        self.current_rate[port]=self.acceleration(port,target_rate)
+        self.current_rate[port]=target_rate
+        print('port',port,'target',target_rate,'current',self.current_rate[port])
         if self.last[port] * target_rate < 0:
             time.sleep(0.0001)
-        if port is 0:
-            self.drive_pin(14,15,current_rate)
-        elif port is 1:
-            self.drive_pin(23,24,current_rate)
-        else:
-            print('unknown port')
-        self.last[port]=current_rate
-    def drive_pin(self,pin1,pin2,rate,BREAK=False):
+        self.drive_pin(port,self.current_rate[port])
+        self.last[port]=self.current_rate[port]
+    def drive_pin(self,port,rate,BREAK=False):
+        print('port:',port,'pin0,1:',self.pins[port],self.pins[0][0],self.pins[0][1],rate)
         if rate > 0:
-            self.pi.set_PWM_dutycycle(pin1,rate)
+            self.pi.set_PWM_dutycycle(self.pins[port][0],rate)
+            self.pi.set_PWM_dutycycle(self.pins[port][1],0)
         elif rate <0:
-            self.pi.set_PWM_dutycycle(pin2.rate)
+            self.pi.set_PWM_dutycycle(self.pins[port][0],0)
+            self.pi.set_PWM_dutycycle(self.pins[port][1],-rate)
         elif BREAK is True:
-            self.pi.set_PWM_dutycycle(pin1,254)
-            self.pi.set_PWM_dutycycle(pin2,254)
+            self.pi.set_PWM_dutycycle(self.pins[port][0],254)
+            self.pi.set_PWM_dutycycle(self.pins[port][1],254)
+
 
 #sub  thread  UDP server
 class  SubUdpServer(threading.Thread):
@@ -89,14 +97,16 @@ class  SubUdpServer(threading.Thread):
 #                time.sleep(1)
 
 if __name__ == '__main__' :
-    led_pwm=[254 for i in range(28)]
+    motor=Motor([[14,15],[23,24],[8,7],[16,20]])
+    pwms=[254 for i in range(28)]
     led=LED()
-    server=SubUdpServer(led_pwm)
+    server=SubUdpServer(pwms)
     server.setDaemon(True)
     server.start()
     print('=== Main Thread  Starts ===')
     while True:
-        led.up(led_pwm);
+        for i in range(4):
+            motor.drive(i,pwms[i]);
+        led.up(pwms[4::]);
+        print('motor',pwms[0:3:],'led',pwms[4::])
         
-#        for i in range(26):
-#            led.up(i,led_pwm[i]);
