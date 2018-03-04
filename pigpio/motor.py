@@ -2,8 +2,8 @@ import pigpio,time,socket,asyncore,requests,datetime,json,threading
 from contextlib import closing
 
 class Motor:
-    last=[0 for i in range(2)]
-    current_rate=[0 for i in range(2)]
+    last=[0 for i in range(4)]
+    current_rate=[0 for i in range(4)]
     pi=pigpio.pi()
     step=10
     pins=[]
@@ -79,7 +79,6 @@ class  SubUdpServer(threading.Thread):
                 print('Udp right',self.data["right"],'left',self.data["left"])
                 time.sleep(1)
 
-#pins=(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27)
 if __name__ == '__main__':
     motor=Motor([[14,15],[23,24],[8,7],[16,20]])
     while True:
@@ -88,11 +87,15 @@ if __name__ == '__main__':
             print('pwm up :',pwm)
             motor.drive(0,pwm)
             motor.drive(1,pwm)
+            motor.drive(2,pwm)
+            motor.drive(3,pwm)
             time.sleep(0.5)
         for pwm in range(254,-254,-20):
             print('pwm down:',pwm)
             motor.drive(0,pwm)
             motor.drive(1,pwm)
+            motor.drive(2,pwm)
+            motor.drive(3,pwm)
             time.sleep(0.5)
 
 
