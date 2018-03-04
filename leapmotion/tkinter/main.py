@@ -30,12 +30,11 @@ class SimpleListener():
     def mainloop(self):
         if self.cnt>9: self.cnt=0
         """
-        set led color here
-        range of led_status is 0x0 to 0xff
+
         """
-        led_status[0]=10
+#        led_status[0]=10
         self.send_led(led_status)
-        print("main loop",id(led_status))
+#        print("main loop",id(led_status))
 
     def on_frame(self,controller):
         print("on_frame")
@@ -44,12 +43,12 @@ class SimpleListener():
         self.send_led(led_status)
 
     def send(self,message):
-        print("message",message)
+#        print("message",message)
         sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         sock.sendto(message.encode('utf-8'),(UDP_IP,UDP_PORT))
         
     def send_led(self,pwm):
-        print "pwm={}".format(pwm)
+#        print "pwm={}".format(pwm)
         pwm_str=map(str,pwm)
         mes=','.join(pwm_str)
         self.send(mes)

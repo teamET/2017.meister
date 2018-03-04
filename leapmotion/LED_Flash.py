@@ -1,6 +1,9 @@
-
+# -*- coding : utf-8 -*-
 import os, sys, inspect,time
 from time import sleep
+
+import viewer
+from viewer import led_status
 
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 arch_dir = 'lib/x64' if sys.maxsize > 2**32 else 'lib/x86'
@@ -17,9 +20,18 @@ import socket,json
 UDP_IP="192.168.0.100"
 UDP_PORT=5005
 
-current=0
-before =0
-p=0
+"""""""""""""""
+定数定義
+Y_MAX:最大の高さ
+Y_MIN:最小の高さ
+
+LEDの送信デューティー比の最大：254
+LEDの送信デューティー比の最小：0
+
+"""""""""""""""
+Y_MAX=430
+Y_MIN=40
+
 
 def is_json(myjson):
     try:
@@ -34,68 +46,51 @@ def send(message):
     sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
     sock.sendto(message.encode('utf-8'),(UDP_IP,UDP_PORT))
 
+
+
 import Leap
 class SampleListener(Leap.Listener):
-
     def on_connect(self,controller):
         print "connected"
-        
     def on_frame(self,controller):
         frame=controller.frame()
         hand = frame.hands.rightmost
-        #finger
-        swipeck=0
-        global current
-        global before
-        global p
-        for finger in hand.fingers:
+        finger=frame.finger
+        global led_status
+        count=0
+        #hands
+        for hand in frame.hands:
             pointable = frame.pointables.frontmost
-            direction = pointable.direction
-            id = pointable.id
-
-            
-            length = pointable.length
-            width = pointable.width
-            stabilizedPosition = pointable.stabilized_tip_position
             position = pointable.tip_position
-            speed = pointable.tip_velocity
-            touchDistance = pointable.touch_distance
-            zone = pointable.touch_zone
+            y=position.y #variable=vector.(x,y,z)
+            #print(y)
+            #position.y.range = 40 to 430
+            #LED: 0 to 254 
+            p=Led_Brightness(y)
             
-        controller.enable_gesture(Leap.Gesture.TYPE_SWIPE);
-        controller.config.set("Gesture.Swipe.MinLength", 100.0)
-        controller.config.set("Gesture.Swipe.MinVelocity", 1000.0)
-        controller.config.save()
-        
-        #gesture/swipe
-        #https://developer.leapmotion.com/documentation/python/api/Leap.SwipeGesture.html
-        for gesture in frame.gestures():
-            if gesture.type is Leap.Gesture.TYPE_SWIPE:
-                swipe = Leap.SwipeGesture(gesture)
-                current = swipe.position
-                velocity = swipe.speed
-                swipeck=1
-                swipper = swipe.pointable
-        
-        if (swipeck is 1):              
-            #print "swipe"
-            current=1    
-            sleep(0.2) #chattering eliminat
-        else:
-            current=0
+            #print(p)
+            #p=100
+            pwm=Led_All(int(p))
+            print"現在のpwmの値を表示：pwm={}".format(pwm)
+            L_status_update(pwm)
+            #Led_Flash(pwm,200,3)
+            Led_Flash_update(pwm,200,3,y)
+            
 
-        if current is 1 and before is 0:
-            if p is 0:
-                p=100
-            elif p is 100:
-                p=0
-        pwm=Led_All(p)
-        Led_Send(pwm)
-        
 def Led_All(p):
     pwm=[p for i in range(9)]
     return pwm
-    
+
+def Led_Brightness(y):
+    p=(254.0/(Y_MAX - Y_MIN))*(y-Y_MIN)
+    #一般式
+    #a-b の範囲の時 x=254/(b-a)*(y-a))
+    if p>254:
+        p=254
+    elif p<0:
+        p=0
+    return p
+
 def Led_Send(pwm):
     print "pwm={}".format(pwm)
     #LED SEND BEGIN
@@ -103,17 +98,67 @@ def Led_Send(pwm):
     mes=','.join(pwm_str)
     send(mes)
     #LED SEND END
+
+
+def Led_Flash(pwm,n,m):
+    #LEDがmainで取得した状態を保ちながら周期nミリ秒でm秒点滅する.
+    #global led_status
+    pwm_current=pwm
+    print(pwm_current)
+    n=n*0.0005
+    m/=2
+    count=0
+    while(True):
+        pwm=[0 for i in range(9)]
+        L_status_update(pwm)
+        
+        sleep(n)
+        pwm=[pwm_current[i] for i in range(9)]
+        L_status_update(pwm)
+        if count==(m/n):
+            break
+        count+=1
+        sleep(n)
+    pwm=pwm_current
+    L_status_update(pwm)
+
+def Led_Flash_update(pwm,n,m,y):
+    #LEDが現在(取得した状態）の状態を"""更新し続けながら"""周期nミリ秒でm秒点滅する.
+    pwm_current=pwm
+    print(pwm_current)
+    n=n*0.0005
+    global count
+    pwm=[0 for i in range(9)]
+    L_status_update(pwm)
+    sleep(n)
+    pwm=[pwm_current[i] for i in range(9)]
+    L_status_update(pwm)
+    sleep(n)
     
+    return True
+
+def L_status_update(pwm):
+    for i in range(9):
+        led_status[i]=pwm[i]
+        Led_Send(pwm)
+            
 def main():
+    global led_status
+
     listener=SampleListener()
     controller=Leap.Controller()
     controller.add_listener(listener)
-    controller.set_policy(Controller.POLICY_BACKGROUND_FRAMES)
+    controller.set_policy(Leap.Controller.POLICY_BACKGROUND_FRAMES)
     controller.set_policy(controller.POLICY_IMAGES)
     controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)
-    
 
     #Controller.set_policy
+    
+
+    #Tkinter
+    v=viewer.viewer()
+    v.setDaemon(True)
+    v.start()
 
     pointable = frame.pointables.frontmost
     direction = pointable.direction

@@ -17,11 +17,11 @@ UDP_IP="192.168.137.132"
 UDP_PORT=5005
 
 """""""""""""""
-å®šæ•°å®šç¾©
-PITCH_MAX:xè»¸æ–¹å‘ã®æœ€å¤§è§’åº¦
-PITCH_MIN:xè»¸æ–¹å‘ã®æœ€å°è§’åº¦
-ROLL_RIGHT:å³ã«å€’ã—ãŸæ™‚ã®æœ€å¤§è§’åº¦(è² ã®å€¤ï¼‰
-ROLL_LEFT:å·¦ã«å€’ã—ãŸæ™‚ã®æœ€å°è§’åº¦(æ­£ã®å€¤ï¼‰
+’è”’è‹`
+PITCH_MAX:x²•ûŒü‚ÌÅ‘åŠp“x
+PITCH_MIN:x²•ûŒü‚ÌÅ¬Šp“x
+ROLL_RIGHT:‰E‚É“|‚µ‚½‚ÌÅ‘åŠp“x(•‰‚Ì’lj
+ROLL_LEFT:¶‚É“|‚µ‚½‚ÌÅ¬Šp“x(³‚Ì’lj
 
 """""""""""""""
 PITCH_MAX=0.8
@@ -65,33 +65,33 @@ class SampleListener(Leap.Listener):
             MoterControl(pitch,roll)       
 
 def Wait():
-    #ç„¡é™ãƒ«ãƒ¼ãƒ—ã®è¡¨ç¤ºæ„Ÿè¦šã‚’é…ãã™ã‚‹
+    #–³ŒÀƒ‹[ƒv‚Ì•\¦Š´Šo‚ğ’x‚­‚·‚é
     for num, i in enumerate(range(100)):
             sys.stdout.flush()
             time.sleep(0.01)
 
-#================================ãƒ¢ãƒ¼ã‚¿ãƒ¼åˆ¶å¾¡====================================#
+#================================ƒ‚[ƒ^[§Œä====================================#
 def MoterControl(pitch,roll):
     #print "hand:x:{}".format(pitch)
     speed=forward(pitch)
     #print "{}".format(roll)
     duty_right=duty(roll)
-    #print "å³å´ã®ãƒ‡ãƒ¥ãƒ¼ãƒ†ã‚£ãƒ¼æ¯”ã¯{}%".format(duty_right)
+    #print "‰E‘¤‚Ìƒfƒ…[ƒeƒB[”ä‚Í{}%".format(duty_right)
     duty_left=100-duty_right
     speed_right = speed * duty_right *0.01
     speed_left  = speed * duty_left  *0.01
     print "right:{0},left:{1}".format(speed_right,speed_left)        
 
 """
-forward   : å‰é€²ã‚¹ãƒ”ãƒ¼ãƒ‰åˆ¶å¾¡ã€€
-left ã€€   : å¾Œé€²ã‚¹ãƒ”ãƒ¼ãƒ‰åˆ¶å¾¡
-ConvertSP : è§’åº¦â†’ã‚¹ãƒ”ãƒ¼ãƒ‰å¤‰æ›é–¢æ•°
+forward   : ‘OiƒXƒs[ƒh§Œä@
+left @   : ŒãiƒXƒs[ƒh§Œä
+ConvertSP : Šp“x¨ƒXƒs[ƒh•ÏŠ·ŠÖ”
 *ConvertSP:
         
 """
-#====================================å‰é€²åˆ¶å¾¡====================================#
+#====================================‘Oi§Œä====================================#
 def forward(pitch):
-    #å‰é€²
+    #‘Oi
     
     if pitch > PITCH_MAX :
         #print "STOP"
@@ -105,10 +105,8 @@ def forward(pitch):
         speed=100
     return speed
     #send('{"right":{0},"left":{1}}'.format(speed,speed))
-    pwm=[speed,speed]
-    Moter_Send(pwm)
 
-#====================================å¾Œé€²åˆ¶å¾¡====================================#
+#====================================Œãi§Œä====================================#
 def back(pitch):
     
     if pitch > PITCH_MAX :
@@ -125,42 +123,33 @@ def back(pitch):
 
     return speed
     #send('{"right":{0},"left":{1}}'.format(speed,speed))
-    pwm=[speed,speed]
-    Moter_Send(pwm)
 
-#==================================è§’åº¦/é€Ÿåº¦å¤‰æ›==================================#
+#==================================Šp“x/‘¬“x•ÏŠ·==================================#
 def ConvertSP(speed):
     speed=-62.5*(speed-PITCH_MAX)
     return speed
 
-#==================================å·¦å³æ–¹å‘åˆ¶å¾¡==================================#
-#å³ãƒ¢ãƒ¼ã‚¿ãƒ¼å›è»¢ç‡ã‚’ç®—å‡ºã™ã‚‹é–¢æ•°å›è»¢ç‡[duty]%
-#å·¦ã®å›è»¢ç‡=100-å³ã®å›è»¢ç‡
+#==================================¶‰E•ûŒü§Œä==================================#
+#‰Eƒ‚[ƒ^[‰ñ“]—¦‚ğZo‚·‚éŠÖ”‰ñ“]—¦[duty]%
+#¶‚Ì‰ñ“]—¦=100-‰E‚Ì‰ñ“]—¦
 def duty(roll):
     if roll > ROLL_LEFT:
-        #print "ã“ã‚Œä»¥ä¸Šå·¦ã«å€’ã—ã¦ã‚‚æ„å‘³ãªã„ã‚ˆ"
+        #print "‚±‚êˆÈã¶‚É“|‚µ‚Ä‚àˆÓ–¡‚È‚¢‚æ"
         duty = 0
     elif roll > ROLL_RIGHT:
-        #print "ä¸­é–“"
+        #print "’†ŠÔ"
         duty = ConvertDuty(roll)
     else :
-        #print "ã“ã‚Œä»¥ä¸Šå³ã«å€’ã—ã¦ã‚‚æ„å‘³ãªã„ã‚ˆ"
+        #print "‚±‚êˆÈã‰E‚É“|‚µ‚Ä‚àˆÓ–¡‚È‚¢‚æ"
         duty = 100
     return duty
         
-#===========================å·¦å³æ–¹å‘è§’åº¦/ãƒ‡ãƒ¥ãƒ¼ãƒ†ã‚£ãƒ¼æ¯”å¤‰æ›==========================#    
+#===========================¶‰E•ûŒüŠp“x/ƒfƒ…[ƒeƒB[”ä•ÏŠ·==========================#    
 def ConvertDuty(roll):
     x = roll+ROLL_LEFT
     y = (100*x)/(ROLL_LEFT-ROLL_RIGHT)
     return y
-
-#MoterSend
-def Moter_Send(pwm):
-    print "pwm={}".format(pwm)
-    #LED SEND BEGIN
-    pwm_str=map(str,pwm)
-    mes=','.join(pwm_str)
-    #LED SEND END
+    
 def main():
     listener=SampleListener()
     controller=Leap.Controller()

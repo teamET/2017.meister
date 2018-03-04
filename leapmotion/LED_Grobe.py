@@ -1,4 +1,5 @@
-
+# -*- coding: cp932 -*-
+# -*- coding : utf-8 -*-
 import os, sys, inspect,time
 from time import sleep
 
@@ -17,8 +18,6 @@ import socket,json
 UDP_IP="192.168.0.100"
 UDP_PORT=5005
 
-current=0
-before =0
 p=0
 
 def is_json(myjson):
@@ -43,55 +42,20 @@ class SampleListener(Leap.Listener):
     def on_frame(self,controller):
         frame=controller.frame()
         hand = frame.hands.rightmost
-        #finger
-        swipeck=0
-        global current
-        global before
+        #hands
         global p
-        for finger in hand.fingers:
-            pointable = frame.pointables.frontmost
-            direction = pointable.direction
-            id = pointable.id
-
+        for hand in frame.hands:
             
-            length = pointable.length
-            width = pointable.width
-            stabilizedPosition = pointable.stabilized_tip_position
-            position = pointable.tip_position
-            speed = pointable.tip_velocity
-            touchDistance = pointable.touch_distance
-            zone = pointable.touch_zone
-            
-        controller.enable_gesture(Leap.Gesture.TYPE_SWIPE);
-        controller.config.set("Gesture.Swipe.MinLength", 100.0)
-        controller.config.set("Gesture.Swipe.MinVelocity", 1000.0)
-        controller.config.save()
-        
-        #gesture/swipe
-        #https://developer.leapmotion.com/documentation/python/api/Leap.SwipeGesture.html
-        for gesture in frame.gestures():
-            if gesture.type is Leap.Gesture.TYPE_SWIPE:
-                swipe = Leap.SwipeGesture(gesture)
-                current = swipe.position
-                velocity = swipe.speed
-                swipeck=1
-                swipper = swipe.pointable
-        
-        if (swipeck is 1):              
-            #print "swipe"
-            current=1    
-            sleep(0.2) #chattering eliminat
-        else:
-            current=0
-
-        if current is 1 and before is 0:
-            if p is 0:
+            #grab_strength åùÇÃîªíË
+            strength = hand.grab_strength
+            print "grab_strength = {}".format(strength)
+            if strength == 1.0:
                 p=100
-            elif p is 100:
+            else:
                 p=0
         pwm=Led_All(p)
         Led_Send(pwm)
-        
+
 def Led_All(p):
     pwm=[p for i in range(9)]
     return pwm

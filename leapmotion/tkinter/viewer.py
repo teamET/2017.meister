@@ -1,23 +1,150 @@
 import threading,time
-
+import Tkinter
 #when you want to update color of led ,you should change this list like main()
-led_status=[i for i in range(25)]
+led_status=[0 for i in range(9)]
+LED_GO=0
+Mode=0
+
+#eb=[0 for i in range(1)]
+#koki start
+#B:button
+#M:menu
+
+#show menu
+def menu():
+    menu = Tkinter.Tk()
+    menu.title(u"menu")
+    menu.geometry("200x200")
+
+    led =Tkinter.Button(menu,text=u'LED')
+    led.bind("<Button-1>",ledM)
+    led.pack()
+
+#show ledmenu
+def ledM(event):
+    """def go(event):
+        LED_GO=1
+        print("LED_GO=",LED_GO)"""
+
+    menu=Tkinter.Tk()
+    menu.title(u"led menu")
+    menu.geometry("200x200")
+    
+    brightnessB=Tkinter.Button(menu,text=u'Set Brightness')
+    brightnessB.bind("<Button-1>",brightnessM)
+    brightnessB.pack()
+
+    gestureB=Tkinter.Button(menu,text=u'Set Gesture')
+    gestureB.bind("<Button-1>",gestureM)
+    gestureB.pack()
+    
+    behaviorB.Tkinter.Button(menu,text=u'Set Behavior')
+    behaviorB.bind("<Button-1>",behaviorM)
+    """goB=Tkinter.Button(menu,text=u'GO!')
+    goB.bind("<Button-1>",go)
+    #lambda event,LED_GO=1:0
+    goB.pack()"""
+
+
+#brightness menu
+def brightnessM(event):
+    def brightness_check(event):
+        for n in range (9):
+            led_status[n] = int(pname[n].get())
+        print("led_status()",led_status)
+
+        
+    menu=Tkinter.Tk()
+    menu.title(u"Brightness menu")
+    menu.geometry("200x200")
+    
+    pname=[0 for i in range(9)]
+    for n in range (9):
+    	pname[n]=Tkinter.Entry(menu,width=3)
+    	pname[n].insert(Tkinter.END,"0")
+    	pname[n].place(x=10+(n%3)*50, y=50+(n/3)*50)
+
+    check=Tkinter.Button(menu,text=u'OK')
+    check.bind("<Button-1>",brightness_check)
+    check.place(x=150,y=150)
+
+
+
+#gesture menu
+def gestureM(event):
+    def gesture_check(event):
+        Mode=int(eg.get())
+        print("Mode=",Mode)
+
+
+    menu=Tkinter.Tk()
+    menu.title(u"gesture menu")
+    menu.geometry("200x200")
+    
+    eg=Tkinter.Entry(menu,width=1)
+    eg.insert(Tkinter.END,"0")
+    eg.pack()
+
+    gn1=Tkinter.Label(menu,text=u'1:lightup all                       ')
+    gn1.pack()
+
+    gn2=Tkinter.Label(menu,text=u'2:move hand veritical       ')
+    gn2.pack()
+
+    gn3=Tkinter.Label(menu,text=u'3:move hand horizontal   ')
+    gn3.pack()
+
+    gn4=Tkinter.Label(menu,text=u'4:clasp and unclasp hand')
+    gn4.pack()
+
+    check=Tkinter.Button(menu,text=u'OK')
+    check.bind("<Button-1>",gesture_check)
+    check.place(x=125,y=0)
+
+def behaviorM(event):
+	menu.Tkinter.TK()
+	menu.title(u"behavior menu")
+	menu.geometry("200x200")
+
+	eb=Tkinter.Entry(menu,width=1)
+    eb.insert(Tkinter.END,"0")
+    eb.pack()
+
+    bn1=Tkinter.Label(menu,text=u'1:lightup all')
+    bn1.pack()
+
+    bn2=Tkinter.Label(menu,text=u'2.rotate right')
+    bn2.pack()
+
+    bn3=Tkinter.Label(menu,tetx=u'3.rotate left')
+
+
+
+#koki end  
 
 class viewer(threading.Thread):
+#    import Tkinter
     def __init__(self):
         import Tkinter
         print("====== ",__name__," ====== ")
         print("====== init viewer thread ====== ")
         super(viewer,self).__init__()
+        self.aaa=3
         self.w=50
         self.h=50
         self.root=Tkinter.Tk()
-        self.root.geometry('500x500')
-        self.c=Tkinter.Canvas(self.root,width=self.w*10,height=self.h*10)
+        self.root.title(u"LEDmap")
+        self.root.geometry('250x250')
+        self.c=Tkinter.Canvas(self.root,bg='black',width=self.w*10,height=self.h*10)
         self.led_id=[]
         global led_id
-        global led_Status
+        global led_status
+        global LED_GO
+        global Mode
+        #global pname
+        #global eb
         self.init_led(self.h,self.w)
+        menu()
  
     def color2hex(self,rgb):
         '''
@@ -35,9 +162,9 @@ class viewer(threading.Thread):
         return color
 
     #draw circle
-    def init_led(self,h,w):
-        for i in range(1,6):
-            for j in range(1,6):
+    def init_led(self,h,w):     
+        for j in range(1,4):
+            for i in range(1,4):
                 self.led_id.append(self.c.create_oval(w*i  ,h*j,w*(i+1), h*(j+1),
                                         fill=self.color2hex([i*16,i*16,i*16])))
         self.c.pack()
@@ -48,18 +175,20 @@ class viewer(threading.Thread):
         for i in range(1,7):
             c.create_line(w*i,h,  w*i,300)
             c.create_line(h  ,h*i,300, h*i)
+        
+
 
     #change color of circle by id based on led_status frequentry
     def run(self):
         while True:
             #root.mainloop() is a substitute for update_idletasks() and update()
             self.root.update_idletasks()
-            print("sub thread run()",id(led_status))
-            for i in range(25):
-                self.c.itemconfig(self.led_id[i],fill=self.color2hex([led_status[i]*10,0,0]))
-                time.sleep(0.01)
+            #print("sub thread run()",id(led_status))
+            for i in range(9):
+                self.c.itemconfig(self.led_id[i],fill=self.color2hex([led_status[i],0,0]))
+                #time.sleep(0.01)
             self.root.update()
-
+        
 
 def main():
         
@@ -69,7 +198,7 @@ def main():
     cnt=0
     global led_status
     while True:
-        led_status=[i*cnt for i in range(25)]
+        led_status=[i*cnt for i in range(9)]
         cnt+=1
         if cnt>9:
             cnt=0

@@ -1,4 +1,4 @@
-
+# -*- coding : utf-8 -*-
 import os, sys, inspect,time
 from time import sleep
 
@@ -17,9 +17,17 @@ import socket,json
 UDP_IP="192.168.0.100"
 UDP_PORT=5005
 
-current=0
-before =0
-p=0
+"""""""""""""""
+定数定義
+Y_MAX:最大の高さ
+Y_MIN:最小の高さ
+
+LEDの送信デューティー比の最大：254
+LEDの送信デューティー比の最小：0
+
+"""""""""""""""
+Y_MAX=430
+Y_MIN=40
 
 def is_json(myjson):
     try:
@@ -36,66 +44,39 @@ def send(message):
 
 import Leap
 class SampleListener(Leap.Listener):
-
     def on_connect(self,controller):
         print "connected"
-        
     def on_frame(self,controller):
         frame=controller.frame()
         hand = frame.hands.rightmost
-        #finger
-        swipeck=0
-        global current
-        global before
-        global p
-        for finger in hand.fingers:
+        finger=frame.finger
+        #hands
+        for hand in frame.hands:
             pointable = frame.pointables.frontmost
-            direction = pointable.direction
-            id = pointable.id
-
-            
-            length = pointable.length
-            width = pointable.width
-            stabilizedPosition = pointable.stabilized_tip_position
             position = pointable.tip_position
-            speed = pointable.tip_velocity
-            touchDistance = pointable.touch_distance
-            zone = pointable.touch_zone
-            
-        controller.enable_gesture(Leap.Gesture.TYPE_SWIPE);
-        controller.config.set("Gesture.Swipe.MinLength", 100.0)
-        controller.config.set("Gesture.Swipe.MinVelocity", 1000.0)
-        controller.config.save()
-        
-        #gesture/swipe
-        #https://developer.leapmotion.com/documentation/python/api/Leap.SwipeGesture.html
-        for gesture in frame.gestures():
-            if gesture.type is Leap.Gesture.TYPE_SWIPE:
-                swipe = Leap.SwipeGesture(gesture)
-                current = swipe.position
-                velocity = swipe.speed
-                swipeck=1
-                swipper = swipe.pointable
-        
-        if (swipeck is 1):              
-            #print "swipe"
-            current=1    
-            sleep(0.2) #chattering eliminat
-        else:
-            current=0
+            y=position.y #variable=vector.(x,y,z)
+            #print(y)
+            #position.y.range = 40 to 430
+            #LED: 0 to 254 
+            p=Led_Brightness(y)
+            #print(p)
+            pwm=Led_All(int(p))
+            Led_Send(pwm)
 
-        if current is 1 and before is 0:
-            if p is 0:
-                p=100
-            elif p is 100:
-                p=0
-        pwm=Led_All(p)
-        Led_Send(pwm)
-        
 def Led_All(p):
     pwm=[p for i in range(9)]
     return pwm
-    
+
+def Led_Brightness(y):
+    p=(254.0/(Y_MAX - Y_MIN))*(y-Y_MIN)
+    #一般式
+    #a-b の範囲の時 x=254/(b-a)*(y-a))
+    if p>254:
+        p=254
+    elif p<0:
+        p=0
+    return p
+
 def Led_Send(pwm):
     print "pwm={}".format(pwm)
     #LED SEND BEGIN
@@ -103,7 +84,7 @@ def Led_Send(pwm):
     mes=','.join(pwm_str)
     send(mes)
     #LED SEND END
-    
+            
 def main():
     listener=SampleListener()
     controller=Leap.Controller()
@@ -111,7 +92,6 @@ def main():
     controller.set_policy(Controller.POLICY_BACKGROUND_FRAMES)
     controller.set_policy(controller.POLICY_IMAGES)
     controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)
-    
 
     #Controller.set_policy
 
@@ -136,4 +116,3 @@ def main():
 
 if __name__=='__main__':
     main()
-
