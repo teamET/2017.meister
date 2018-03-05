@@ -112,50 +112,6 @@ class viewer(threading.Thread):
                 self.c.itemconfig(self.led_id[i],fill=self.color2hex([led_status[i]*10,0,0]))
                 time.sleep(0.01)
             self.root.update()
-
-    #koki start
-    #B:button
-    #M:menu
-
-    #show menu
-    """
-    def menu(self):
-        menu = Tkinter.Tk()
-        menu.title(u"menu")
-        menu.geometry("400x300")
-
-        led =Tkinter.Button(menu,text=u'LED')
-        led.bind("<Button-1>",lambda event:self.ledM)
-        led.place(x=150,y=60)
-
-    """
-    #show ledmenu
-    """
-    def ledM(self):
-        menu=Tkinter.Tk()
-        menu.title(u"led menu")
-        menu.geometry("400x300")
-        
-        patternB=Tkinter.Button(menu,text=u'Set Pattern')
-        patternB.bind("<Button-1>",self.patternM)
-        patternB.place(x=150,y=60)
-
-        gestureB=Tkinter.Button(menu,text=u'Set')
-        gestureB.bind("<Button-1>",self.gestureM)
-        gestureB.place(x=150,y=90)
-
-        goB=Tkinter.Button(menu,text=u'GO!')
-        #goB.bind("<Button-1>",)
-        goB.place(x=150,y=120)  
-    """
-    def patternM(self):
-        menu=Tkinter.Tk()
-        menu.title(u"pattern menu")
-        menu.geometry("400x300")
-
-
-
-    #koki end
         
 
 def main():
