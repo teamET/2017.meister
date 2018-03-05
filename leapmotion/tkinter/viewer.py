@@ -12,40 +12,39 @@ led_status=[i for i in range(25)]
 def menu():
     menu = Tkinter.Tk()
     menu.title(u"menu")
-    menu.geometry("400x300")
+    menu.geometry("50x50")
 
     led =Tkinter.Button(menu,text=u'LED')
     led.bind("<Button-1>",ledM)
-    led.place(x=150,y=60)
-
+    led.place(x=25,y=0)
 
 #show ledmenu
 def ledM(event):
     menu=Tkinter.Tk()
     menu.title(u"led menu")
-    menu.geometry("400x300")
+    menu.geometry("100x100")
     
     patternB=Tkinter.Button(menu,text=u'Set Pattern')
     patternB.bind("<Button-1>",patternM)
-    patternB.place(x=150,y=60)
+    patternB.place(x=50,y=30)
 
     gestureB=Tkinter.Button(menu,text=u'Set')
     gestureB.bind("<Button-1>",gestureM)
-    gestureB.place(x=150,y=90)
+    gestureB.place(x=50,y=60)
 
     goB=Tkinter.Button(menu,text=u'GO!')
     #goB.bind("<Button-1>",)
-    goB.place(x=150,y=120)  
+    goB.place(x=50,y=90)  
 
 def patternM(event):
     menu=Tkinter.Tk()
     menu.title(u"pattern menu")
-    menu.geometry("400x300")
+    menu.geometry("100x100")
 
 def gestureM(event):
     menu=Tkinter.Tk()
     menu.title(u"gesture menu")
-    menu.geometry("400x300")
+    menu.geometry("100x100")
 
 
 #koki end  
@@ -109,7 +108,7 @@ class viewer(threading.Thread):
             self.root.update_idletasks()
             print("sub thread run()",id(led_status))
             for i in range(9):
-                self.c.itemconfig(self.led_id[i],fill=self.color2hex([led_status[i]*10,0,0]))
+                self.c.itemconfig(self.led_id[i],fill=self.color2hex([led_status[i],0,0]))
                 time.sleep(0.01)
             self.root.update()
         
