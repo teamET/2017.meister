@@ -12,39 +12,37 @@ led_status=[i for i in range(25)]
 def menu():
     menu = Tkinter.Tk()
     menu.title(u"menu")
-    menu.geometry("50x50")
 
     led =Tkinter.Button(menu,text=u'LED')
     led.bind("<Button-1>",ledM)
-    led.place(x=25,y=0)
+    led.pack()
+    #led.place(x=10,y=10)
 
 #show ledmenu
 def ledM(event):
     menu=Tkinter.Tk()
     menu.title(u"led menu")
-    menu.geometry("100x100")
+    #menu.geometry("100x100")
     
     patternB=Tkinter.Button(menu,text=u'Set Pattern')
     patternB.bind("<Button-1>",patternM)
-    patternB.place(x=50,y=30)
+    patternB.pack()
 
     gestureB=Tkinter.Button(menu,text=u'Set')
     gestureB.bind("<Button-1>",gestureM)
-    gestureB.place(x=50,y=60)
+    gestureB.pack()
 
     goB=Tkinter.Button(menu,text=u'GO!')
     #goB.bind("<Button-1>",)
-    goB.place(x=50,y=90)  
+    goB.pack()  
 
 def patternM(event):
     menu=Tkinter.Tk()
     menu.title(u"pattern menu")
-    menu.geometry("100x100")
 
 def gestureM(event):
     menu=Tkinter.Tk()
     menu.title(u"gesture menu")
-    menu.geometry("100x100")
 
 
 #koki end  
@@ -62,7 +60,7 @@ class viewer(threading.Thread):
         self.root=Tkinter.Tk()
         self.root.title(u"LEDmap")
         self.root.geometry('250x250')
-        self.c=Tkinter.Canvas(self.root,width=self.w*10,height=self.h*10)
+        self.c=Tkinter.Canvas(self.root,bg='black',width=self.w*10,height=self.h*10)
         self.led_id=[]
         global led_id
         global led_Status
@@ -85,7 +83,7 @@ class viewer(threading.Thread):
         return color
 
     #draw circle
-    def init_led(self,h,w):        
+    def init_led(self,h,w):     
         for i in range(1,4):
             for j in range(1,4):
                 self.led_id.append(self.c.create_oval(w*i  ,h*j,w*(i+1), h*(j+1),
