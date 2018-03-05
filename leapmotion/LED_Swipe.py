@@ -10,6 +10,7 @@ src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 lib_dir = os.path.abspath(os.path.join(src_dir, 'lib'))
 sys.path.insert(0, lib_dir)
 
+
 import socket,json
 #  UDP communication
 #raspberry pi ip address
@@ -93,9 +94,7 @@ class SampleListener(Leap.Listener):
         Led_Send(pwm)
         
 def Led_All(p):
-    pwm=[p,p,p,
-         p,p,p
-         p,p,p]
+    pwm=[p for i in range(9)]
     return pwm
     
 def Led_Send(pwm):
