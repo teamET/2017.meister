@@ -1,8 +1,10 @@
 import threading,time
 import Tkinter
 #when you want to update color of led ,you should change this list like main()
-led_status=[i for i in range(25)]
-
+led_status=[i for i in range(9)]
+LED_GO=0
+ebhandle=[]
+Mode=0
 
 #koki start
 #B:button
@@ -22,7 +24,7 @@ def menu():
 def ledM(event):
     menu=Tkinter.Tk()
     menu.title(u"led menu")
-    #menu.geometry("100x100")
+    menu.geometry("200x200")
     
     patternB=Tkinter.Button(menu,text=u'Set Pattern')
     patternB.bind("<Button-1>",patternM)
@@ -31,19 +33,37 @@ def ledM(event):
     gestureB=Tkinter.Button(menu,text=u'Set')
     gestureB.bind("<Button-1>",gestureM)
     gestureB.pack()
-
+	
     goB=Tkinter.Button(menu,text=u'GO!')
-    #goB.bind("<Button-1>",)
+    goB.bind("<Button-1>",lambda event,LED_GO=1:0)
     goB.pack()  
 
+#pattern menu
 def patternM(event):
     menu=Tkinter.Tk()
     menu.title(u"pattern menu")
+    menu.geometry("300x300")
 
+    for n in range (9):
+    	eb =Tkinter.Entry(menu,width=3)
+    	eb.insert(Tkinter.END,"0")
+    	eb.place(x=5+(n%3)*50, y=5+(n/3)*50)
+    	ebhandle.append(eb)
+
+    check=Tkinter.Button(menu,text=u'OK')
+    check.bind("<Button-1>",pattern_check)
+    check.place(x=250,y=450)
+
+def pattern_check(event):
+	for n in range (9):
+		led_status[n] = ebhandle[n].get()
+	print("sub thread run()",id(led_status))
+
+#gesture menu
 def gestureM(event):
     menu=Tkinter.Tk()
     menu.title(u"gesture menu")
-
+    menu.geometry("200x200")
 
 #koki end  
 
@@ -63,7 +83,10 @@ class viewer(threading.Thread):
         self.c=Tkinter.Canvas(self.root,bg='black',width=self.w*10,height=self.h*10)
         self.led_id=[]
         global led_id
-        global led_Status
+        global led_status
+        global LED_GO
+        global ebhandle
+        global Mode
         self.init_led(self.h,self.w)
         menu()
  
@@ -84,8 +107,8 @@ class viewer(threading.Thread):
 
     #draw circle
     def init_led(self,h,w):     
-        for i in range(1,4):
-            for j in range(1,4):
+        for j in range(1,4):
+            for i in range(1,4):
                 self.led_id.append(self.c.create_oval(w*i  ,h*j,w*(i+1), h*(j+1),
                                         fill=self.color2hex([i*16,i*16,i*16])))
         self.c.pack()
@@ -104,10 +127,10 @@ class viewer(threading.Thread):
         while True:
             #root.mainloop() is a substitute for update_idletasks() and update()
             self.root.update_idletasks()
-            print("sub thread run()",id(led_status))
+            #print("sub thread run()",id(led_status))
             for i in range(9):
                 self.c.itemconfig(self.led_id[i],fill=self.color2hex([led_status[i],0,0]))
-                time.sleep(0.01)
+                #time.sleep(0.01)
             self.root.update()
         
 
