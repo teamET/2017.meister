@@ -1,11 +1,12 @@
 import threading,time
 import Tkinter
 #when you want to update color of led ,you should change this list like main()
-led_status=[i for i in range(9)]
+led_status=[0 for i in range(9)]
 LED_GO=0
 ebhandle=[]
 Mode=0
-
+pname=[0 for i in range(9)]
+gname=[1 for i in range(4)]
 #koki start
 #B:button
 #M:menu
@@ -14,6 +15,7 @@ Mode=0
 def menu():
     menu = Tkinter.Tk()
     menu.title(u"menu")
+    menu.geometry("200x200")
 
     led =Tkinter.Button(menu,text=u'LED')
     led.bind("<Button-1>",ledM)
@@ -35,35 +37,46 @@ def ledM(event):
     gestureB.pack()
 	
     goB=Tkinter.Button(menu,text=u'GO!')
-    goB.bind("<Button-1>",lambda event,LED_GO=1:0)
+    goB.bind("<Button-1>",go)
+    '''lambda event,LED_GO=1:0'''
     goB.pack()  
+
+def go():
+	LED_GO=1
 
 #pattern menu
 def patternM(event):
     menu=Tkinter.Tk()
     menu.title(u"pattern menu")
-    menu.geometry("300x300")
-
+    menu.geometry("200x200")
+	
     for n in range (9):
-    	eb =Tkinter.Entry(menu,width=3)
-    	eb.insert(Tkinter.END,"0")
-    	eb.place(x=5+(n%3)*50, y=5+(n/3)*50)
-    	ebhandle.append(eb)
+    	pname[n]=Tkinter.Entry(menu,width=3)
+    	pname[n].insert(Tkinter.END,"0")
+    	pname[n].place(x=10+(n%3)*50, y=50+(n/3)*50)
 
     check=Tkinter.Button(menu,text=u'OK')
     check.bind("<Button-1>",pattern_check)
-    check.place(x=250,y=450)
+    check.place(x=150,y=150)
 
 def pattern_check(event):
 	for n in range (9):
-		led_status[n] = ebhandle[n].get()
-	print("sub thread run()",id(led_status))
+		led_status[n] = int(pname[n].get())
+
+	print("led_status()",led_status)
 
 #gesture menu
 def gestureM(event):
     menu=Tkinter.Tk()
     menu.title(u"gesture menu")
     menu.geometry("200x200")
+    bl = Tkinter.BooleanVar()
+    gname[1]=Tkinter.Checkbutton(text=u"lightup all")
+    gname[2]=Tkinter.Checkbutton(text=u"height of hand")
+    gname[3]=Tkinter.Checkbutton(text=u"Swipe")
+    gname[4]=Tkinter.Checkbutton(text=u"goopeer")
+    for n in range(1,4):
+    	gname[n].pack()
 
 #koki end  
 
@@ -87,6 +100,8 @@ class viewer(threading.Thread):
         global LED_GO
         global ebhandle
         global Mode
+        global pname
+        global gname
         self.init_led(self.h,self.w)
         menu()
  
