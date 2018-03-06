@@ -20,6 +20,9 @@
 
 	led_status : LEDのデータ（現在状態）List[ [now] for i in range(9)]
 				 userが決めたLED_patternを格納する
+				 0 1 2
+				 3 4 5
+				 6 7 8
 	
 	Mode	   :　Modeの番号によって機能が変化する．
 	 Modeは主にLeapMotionでの機能の切り替わりに利用する
