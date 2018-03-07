@@ -32,6 +32,7 @@ LEDの送信デューティー比の最小：0
 Y_MAX=430
 Y_MIN=40
 
+
 def is_json(myjson):
     try:
         json_object = json.loads(myjson)
@@ -56,9 +57,9 @@ class SampleListener(Leap.Listener):
         hand = frame.hands.rightmost
         finger=frame.finger
         global led_status
+        count=0
         #hands
         for hand in frame.hands:
-            print("AAAA")
             pointable = frame.pointables.frontmost
             position = pointable.tip_position
             y=position.y #variable=vector.(x,y,z)
@@ -73,7 +74,7 @@ class SampleListener(Leap.Listener):
             print"現在のpwmの値を表示：pwm={}".format(pwm)
             L_status_update(pwm)
             #Led_Flash(pwm,200,3)
-            while(Led_Flash_update(pwm,200,3,y)):pass
+            Led_Flash_update(pwm,200,3,y)
             
 
 def Led_All(p):
@@ -126,15 +127,15 @@ def Led_Flash_update(pwm,n,m,y):
     pwm_current=pwm
     print(pwm_current)
     n=n*0.0005
+    global count
     pwm=[0 for i in range(9)]
     L_status_update(pwm)
     sleep(n)
     pwm=[pwm_current[i] for i in range(9)]
     L_status_update(pwm)
     sleep(n)
-    if count==(m/2) : ck=0
-    else : ck=1
-    return ck
+    
+    return True
 
 def L_status_update(pwm):
     for i in range(9):
