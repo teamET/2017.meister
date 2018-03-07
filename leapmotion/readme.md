@@ -31,6 +31,7 @@
 
 		Mode == 0~99 ：　LED
 
+		#いらないかも（Mode=0)
 		Mode==0
 			LEDモード　（LeapMotion側でLEDモードに切り替わる）
 		Mode==1
