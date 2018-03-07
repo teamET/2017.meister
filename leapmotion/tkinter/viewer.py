@@ -3,10 +3,9 @@ import Tkinter
 #when you want to update color of led ,you should change this list like main()
 led_status=[0 for i in range(9)]
 LED_GO=0
-ebhandle=[]
 Mode=0
-pname=[0 for i in range(9)]
-gname=[1 for i in range(4)]
+
+#eb=[0 for i in range(1)]
 #koki start
 #B:button
 #M:menu
@@ -20,63 +19,106 @@ def menu():
     led =Tkinter.Button(menu,text=u'LED')
     led.bind("<Button-1>",ledM)
     led.pack()
-    #led.place(x=10,y=10)
 
 #show ledmenu
 def ledM(event):
+    """def go(event):
+        LED_GO=1
+        print("LED_GO=",LED_GO)"""
+
     menu=Tkinter.Tk()
     menu.title(u"led menu")
     menu.geometry("200x200")
     
-    patternB=Tkinter.Button(menu,text=u'Set Pattern')
-    patternB.bind("<Button-1>",patternM)
-    patternB.pack()
+    brightnessB=Tkinter.Button(menu,text=u'Set Brightness')
+    brightnessB.bind("<Button-1>",brightnessM)
+    brightnessB.pack()
 
-    gestureB=Tkinter.Button(menu,text=u'Set')
+    gestureB=Tkinter.Button(menu,text=u'Set Gesture')
     gestureB.bind("<Button-1>",gestureM)
     gestureB.pack()
-	
-    goB=Tkinter.Button(menu,text=u'GO!')
+    
+    behaviorB.Tkinter.Button(menu,text=u'Set Behavior')
+    behaviorB.bind("<Button-1>",behaviorM)
+    """goB=Tkinter.Button(menu,text=u'GO!')
     goB.bind("<Button-1>",go)
-    '''lambda event,LED_GO=1:0'''
-    goB.pack()  
+    #lambda event,LED_GO=1:0
+    goB.pack()"""
 
-def go():
-	LED_GO=1
 
-#pattern menu
-def patternM(event):
+#brightness menu
+def brightnessM(event):
+    def brightness_check(event):
+        for n in range (9):
+            led_status[n] = int(pname[n].get())
+        print("led_status()",led_status)
+
+        
     menu=Tkinter.Tk()
-    menu.title(u"pattern menu")
+    menu.title(u"Brightness menu")
     menu.geometry("200x200")
-	
+    
+    pname=[0 for i in range(9)]
     for n in range (9):
     	pname[n]=Tkinter.Entry(menu,width=3)
     	pname[n].insert(Tkinter.END,"0")
     	pname[n].place(x=10+(n%3)*50, y=50+(n/3)*50)
 
     check=Tkinter.Button(menu,text=u'OK')
-    check.bind("<Button-1>",pattern_check)
+    check.bind("<Button-1>",brightness_check)
     check.place(x=150,y=150)
 
-def pattern_check(event):
-	for n in range (9):
-		led_status[n] = int(pname[n].get())
 
-	print("led_status()",led_status)
 
 #gesture menu
 def gestureM(event):
+    def gesture_check(event):
+        Mode=int(eg.get())
+        print("Mode=",Mode)
+
+
     menu=Tkinter.Tk()
     menu.title(u"gesture menu")
     menu.geometry("200x200")
-    bl = Tkinter.BooleanVar()
-    gname[1]=Tkinter.Checkbutton(text=u"lightup all")
-    gname[2]=Tkinter.Checkbutton(text=u"height of hand")
-    gname[3]=Tkinter.Checkbutton(text=u"Swipe")
-    gname[4]=Tkinter.Checkbutton(text=u"goopeer")
-    for n in range(1,4):
-    	gname[n].pack()
+    
+    eg=Tkinter.Entry(menu,width=1)
+    eg.insert(Tkinter.END,"0")
+    eg.pack()
+
+    gn1=Tkinter.Label(menu,text=u'1:lightup all                       ')
+    gn1.pack()
+
+    gn2=Tkinter.Label(menu,text=u'2:move hand veritical       ')
+    gn2.pack()
+
+    gn3=Tkinter.Label(menu,text=u'3:move hand horizontal   ')
+    gn3.pack()
+
+    gn4=Tkinter.Label(menu,text=u'4:clasp and unclasp hand')
+    gn4.pack()
+
+    check=Tkinter.Button(menu,text=u'OK')
+    check.bind("<Button-1>",gesture_check)
+    check.place(x=125,y=0)
+
+def behaviorM(event):
+	menu.Tkinter.TK()
+	menu.title(u"behavior menu")
+	menu.geometry("200x200")
+
+	eb=Tkinter.Entry(menu,width=1)
+    eb.insert(Tkinter.END,"0")
+    eb.pack()
+
+    bn1=Tkinter.Label(menu,text=u'1:lightup all')
+    bn1.pack()
+
+    bn2=Tkinter.Label(menu,text=u'2.rotate right')
+    bn2.pack()
+
+    bn3=Tkinter.Label(menu,tetx=u'3.rotate left')
+
+
 
 #koki end  
 
@@ -98,10 +140,9 @@ class viewer(threading.Thread):
         global led_id
         global led_status
         global LED_GO
-        global ebhandle
         global Mode
-        global pname
-        global gname
+        #global pname
+        #global eb
         self.init_led(self.h,self.w)
         menu()
  
@@ -157,7 +198,7 @@ def main():
     cnt=0
     global led_status
     while True:
-        led_status=[i*cnt for i in range(25)]
+        led_status=[i*cnt for i in range(9)]
         cnt+=1
         if cnt>9:
             cnt=0
