@@ -4,8 +4,9 @@ import Tkinter
 led_status=[0 for i in range(9)]
 LED_GO=0
 Mode=0
-
-#eb=[0 for i in range(1)]
+Cycle=0
+Cycle_t=0
+tail=0
 #koki start
 #B:button
 #M:menu
@@ -22,9 +23,6 @@ def menu():
 
 #show ledmenu
 def ledM(event):
-    """def go(event):
-        LED_GO=1
-        print("LED_GO=",LED_GO)"""
 
     menu=Tkinter.Tk()
     menu.title(u"led menu")
@@ -37,13 +35,11 @@ def ledM(event):
     gestureB=Tkinter.Button(menu,text=u'Set Gesture')
     gestureB.bind("<Button-1>",gestureM)
     gestureB.pack()
-    
-    behaviorB.Tkinter.Button(menu,text=u'Set Behavior')
+
+    behaviorB=Tkinter.Button(menu,text=u'Set Behavior')
     behaviorB.bind("<Button-1>",behaviorM)
-    """goB=Tkinter.Button(menu,text=u'GO!')
-    goB.bind("<Button-1>",go)
-    #lambda event,LED_GO=1:0
-    goB.pack()"""
+    behaviorB.pack()
+    
 
 
 #brightness menu
@@ -67,6 +63,9 @@ def brightnessM(event):
     check=Tkinter.Button(menu,text=u'OK')
     check.bind("<Button-1>",brightness_check)
     check.place(x=150,y=150)
+
+    label=Tkinter.Label(menu,text=u'Enter number between 0 to 254')
+    label.place(x=10,y=5)
 
 
 
@@ -101,23 +100,70 @@ def gestureM(event):
     check.bind("<Button-1>",gesture_check)
     check.place(x=125,y=0)
 
+#behavior menu
 def behaviorM(event):
-	menu.Tkinter.TK()
-	menu.title(u"behavior menu")
-	menu.geometry("200x200")
+    def behavior_check(event):
+        LED_GO=int(eb.get())
+        print("LED_GO=",LED_GO)
+        if LED_GO==2 or LED_GO==3:
+        	cycleM()
+        	
+    menu=Tkinter.Tk()
+    menu.title(u"behavior menu")
+    menu.geometry("200x200")
 
-	eb=Tkinter.Entry(menu,width=1)
+    eb=Tkinter.Entry(menu,width=1)
     eb.insert(Tkinter.END,"0")
     eb.pack()
 
-    bn1=Tkinter.Label(menu,text=u'1:lightup all')
+    bn1=Tkinter.Label(menu,text=u'1:lightup all   ')
     bn1.pack()
 
     bn2=Tkinter.Label(menu,text=u'2.rotate right')
     bn2.pack()
 
-    bn3=Tkinter.Label(menu,tetx=u'3.rotate left')
+    bn3=Tkinter.Label(menu,text=u'3.rotate left')
+    bn3.pack()
 
+    check=Tkinter.Button(menu,text=u'OK')
+    check.bind("<Button-1>",behavior_check)
+    check.place(x=125,y=0)
+
+def cycleM(event):
+	def cycle_check(event):
+		Cycle=int(ce.get())
+		Cycle_t=int(ct.get())
+		tail=int(t,get())
+		print("Cycle=",Cycle," Cycle_t=",Cycle_t," tail=",tail)
+
+	menu=Tkinter.Tk()
+	menu.title(u"Set Cycle")
+	menu.geometry("200x200")
+
+	ce=Tkinter.Entry(menu)
+	ce.insert(Tkinter.END,"0")
+	ce.pack()
+
+	cet=Tkinter.Label(menu,text=u'Cycle(msec)')
+	cet.place(x=110,y=0)
+
+	ct=Tkinter.Entry(menu)
+	ct.insert(Tkinter.END,"0")
+	ct.pack()
+
+	ctt.Tkinter.Label(menu,text=u'Cycle time(sec)')
+	ctt.place(x=110,y=30)
+
+	t=Tkinter.Entry(menu)
+	t.insert(Tkinter.END,"0")
+	t.pack()
+
+	tt=Tkinter.Label(menu,text=u'tail(%)')
+	tt.place(x=110,y=60)
+
+	check=Tkinter.Button(menu,text=u'OK')
+	check.bind("<Button-1",cycle_check)
+	check.pack()
 
 
 #koki end  
@@ -141,8 +187,9 @@ class viewer(threading.Thread):
         global led_status
         global LED_GO
         global Mode
-        #global pname
-        #global eb
+        global Cycle
+        global Cycle_t
+        global tail
         self.init_led(self.h,self.w)
         menu()
  
