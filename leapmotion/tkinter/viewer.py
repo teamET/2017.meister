@@ -6,7 +6,7 @@ led_status=[0 for i in range(9)]
 LED_GO=0
 Mode=0
 Cycle=0
-Cycle_t=0
+brightness=0
 tail=0
 #koki start
 #B:button
@@ -27,16 +27,18 @@ def menu():
     motor.pack()
 
 def motorM(event):
-	def go_check(event):
-            Mode=100
-	    print("Mode=",Mode)
-	menu=Tkinter.Tk()
-	menu.title(u"Motor menu")
-	menu.geometry("200x200")
+    def go_check(event):
+        Mode=100
+        print("Mode=",Mode)
+	
+	global Mode
+    menu=Tkinter.Tk()
+    menu.title(u"Motor menu")
+    menu.geometry("200x200")
 
-	goB=Tkinter.Button(menu,text=u'GO!')
-	goB.bind("<Button-1>",go_check)
-	goB.pack()
+    goB=Tkinter.Button(menu,text=u'GO!')
+    goB.bind("<Button-1>",go_check)
+    goB.pack()
 
 #show ledmenu
 def ledM(event):
@@ -86,6 +88,7 @@ def brightnessM(event):
 
 #gesture menu
 def gestureM(event):
+    global Mode
     def gesture_check(event):
         Mode=int(eg.get())
         print("Mode=",Mode)
@@ -118,16 +121,22 @@ def gestureM(event):
 #behavior menu
 def behaviorM(event):
     def behavior_check(event):
+        global Mode
+        global LED_GO
     	def cycle_check(event):
-	    Cycle=int(ce.get())
-            Cycle_t=int(ct.get())
+            Cycle=int(ce.get())
+            brightness=int(brn.get())
             #tail=int(t,get())
-            print("Cycle=",Cycle," Cycle_t=",Cycle_t," tail=",tail)
-    	
-        LED_GO=int(eb.get())
-        print("LED_GO=",LED_GO)
-        if LED_GO==2 or LED_GO==3:
-        
+            print("Cycle=",Cycle," brightness=",brightness)
+    	#cycle_check end
+
+    	ebnum=int(eb.get())+2
+    	print("ebnum=",ebnum)
+    	if ebnum==3 or ebnum==4:
+            LED_GO=ebnum
+    	elif ebnum==5:
+            Mode=ebnum
+
             menu=Tkinter.Tk()
             menu.title(u"Set Cycle")
             menu.geometry("200x200")
@@ -136,15 +145,15 @@ def behaviorM(event):
             ce.insert(Tkinter.END,"0")
             ce.pack()	    
 
-            ct=Tkinter.Entry(menu,width=4)
-            ct.insert(Tkinter.END,"0")
-            ct.pack()
+            brn=Tkinter.Entry(menu,width=3)
+            brn.insert(Tkinter.END,"0")
+            brn.pack()
 
             cet=Tkinter.Label(menu,text=u'Cycle(msec)')
-            cet.place(x=110,y=0)
+            cet.place(x=0,y=0)
 
-            ctt=Tkinter.Label(menu,text=u'Cycle(msec)')
-            ctt.place(x=110,y=30)	    
+            brnt=Tkinter.Label(menu,text=u'brightness(0-254)')
+            brnt.place(x=0,y=20)	    
 
             """t=Tkinter.Entry(menu)
             t.insert(Tkinter.END,"0")
@@ -156,7 +165,13 @@ def behaviorM(event):
             check=Tkinter.Button(menu,text=u'OK')
             check.bind("<Button-1>",cycle_check)
             check.pack()
-        #behavior check end
+        #if end
+
+        print("Mode=",Mode)
+        print("LED_GO=",LED_GO)
+        
+           
+    #behavior check end
 		        	
     menu=Tkinter.Tk()
     menu.title(u"behavior menu")
@@ -166,22 +181,28 @@ def behaviorM(event):
     eb.insert(Tkinter.END,"0")
     eb.pack()
 
-    bn1=Tkinter.Label(menu,text=u'1:lightup all   ')
+    """bn1=Tkinter.Label(menu,text=u'1:rotate right   ')
     bn1.pack()
 
-    bn2=Tkinter.Label(menu,text=u'2.rotate right')
-    bn2.pack()
+    bn2=Tkinter.Label(menu,text=u'2.rotate left')
+    bn2.pack()"""
 
-    bn3=Tkinter.Label(menu,text=u'3.rotate left')
+    bn3=Tkinter.Label(menu,text=u'1.Flashing ver.1')
     bn3.pack()
+
+    bn4=Tkinter.Label(menu,text=u'2.Flashing ver.2')
+    bn4.pack()
+
+    bn5=Tkinter.Label(menu,text=u'3.rotate')
+    bn5.pack()
 
     check=Tkinter.Button(menu,text=u'OK')
     check.bind("<Button-1>",behavior_check)
     check.place(x=125,y=0)
+#behaviorM end
 
 def cycleM(event):
     pass
-
 
 #koki end  
 
@@ -205,7 +226,7 @@ class viewer(threading.Thread):
         global LED_GO
         global Mode
         global Cycle
-        global Cycle_t
+        global brightness
         global tail
         self.init_led(self.h,self.w)
         menu()
