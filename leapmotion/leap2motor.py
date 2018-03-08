@@ -1,10 +1,107 @@
-'''
-motor only
+# -*- coding : utf-8 -*-
+
+"""
+GUI_LeapMotion Specification 3/6/2018 S.Hirose
+
+1.Raspberry-pi-Send-Data List: send = [MotorFrontRight,MotorFrontLeft,MotorBackRight,MotorBackLeft, LED0,LED1,LED2,LED3,LED4,LED5,LED6,LED7,LED8]
+
+                    Motor
+        FrontLeft           FrontRight
+        Back Left           Back Right
+
+                    LED
+                    
+            LED0    LED1    LED2
+            LED3    LED4    LED5
+            LED6    LED7    LED8
+2.Variables
+
+led_status : LEDÇÃÉfÅ[É^Åiåªç›èÛë‘ÅjList[ [now] for i in range(9)]
+             userÇ™åàÇﬂÇΩLED_patternÇäiî[Ç∑ÇÈ
+             0 1 2
+             3 4 5
+             6 7 8
+
+Mode	   :Å@ModeÇÃî‘çÜÇ…ÇÊÇ¡Çƒã@î\Ç™ïœâªÇ∑ÇÈÅD
+ ModeÇÕéÂÇ…LeapMotionÇ≈ÇÃã@î\ÇÃêÿÇËë÷ÇÌÇËÇ…óòópÇ∑ÇÈ
+
+Mode : menu ÇÃÉCÉÅÅ[ÉW
+
+    Mode == 0~99 ÅFÅ@LED
+
+    Mode==0
+        LEDÉÇÅ[ÉhÅ@ÅiLeapMotionë§Ç≈LEDÉÇÅ[ÉhÇ…êÿÇËë÷ÇÌÇÈÅj
+    Mode==1
+        ì_ìîÉpÉ^Å[ÉìÇ™ïœÇÌÇ¡ÇƒÇ‡ÅCëSïîì_ìîÇµÇΩèÛë‘Çï€Ç¬
+    Mode==2
+        éËÇÃçÇÇ≥Ç…ÇÊÇ¡ÇƒLEDÇÃì_ìîèÛë‘Ç™ïœâªÇ∑ÇÈ
+    Mode==3
+        SwipeÇ…ÇÊÇ¡ÇƒLEDÇÃì_ìîèÛë‘Ç™ïœâªÇ∑ÇÈ
+    Mode==4
+        éËÇÃÇÆÅ[ÇœÅ[Ç…ÇÊÇ¡ÇƒLEDÇÃì_ìîèÛë‘Ç™ïœâªÇ∑ÇÈ
+    Mode==5
+        :
+        :
+        ÅF
+
+    ã@î\Çí«â¡ÇµÇΩÇÁMode==5~99Ç…LEDÇÃêßå‰Ç…ä÷Ç∑ÇÈìÆçÏÇ™ïœÇÌÇÈ
+
+--------------------------------------------------------------
+
+    Mode==100
+        ÉÇÅ[É^Å[ãÏìÆÅiGO!)Å@ÅFÅ@éËÇÃäpìxÇ…ëŒÇµÇƒÉçÅ[ÉoÅ[ìÆÇ´Ç™ïœÇÌÇÈ
+    Mode==101
+        ÉÇÅ[É^Å[ãÏìÆÅiGO!)Å@ÅFÅ@éËÇÃÉxÉNÉgÉãÇ…ëŒÇµÇƒÉçÅ[ÉoÅ[ìÆÇ´Ç™ïœÇÌÇÈ
+    ê˘âÒÇÕMode==100,101Ç…ä‹Ç‹ÇÍÇÈÇ∆évÇ§
+
+        :
+        :
+
+    ã@î\Çí«â¡ÇµÇΩÇÁMode==100~199Ç…ÉÇÅ[É^Å[ÇÃêßå‰Ç…ä÷Ç∑ÇÈìÆçÏÇ™ïœÇÌÇÈ
+
+-------------------------------------------------------------
+
+    Mode==200
+        âBÇµÉRÉ}ÉìÉh01 : âπäyÅiÅH)Å@
+
+        :
+        :
+
+    ã@î\Çí«â¡ÇµÇΩÇÁMode==200~299Ç…âBÇµÉRÉ}ÉìÉhÇ…ä÷Ç∑ÇÈìÆçÏÇÇ∑ÇÈ
 
 
-'''
+status     : Ç∑Ç◊ÇƒÇÃÉfÅ[É^(åªç›èÛë‘)List[[now] for i in range(14)]
+    Ç±ÇÍÇSendÇ∑ÇÈ(Send DataÇÕè„ÇéQè∆)
+
+LED_GO	   : LEDÇÃì_ìîï˚ñ@ÇïœâªÇ≥ÇπÇÈïœêî
+
+    LED_GO==0
+        ïÅí Ç…ëSïîì_ìîÅiMode==1Ç∆à·Ç§ÇÃÇÕÅCì_ìîÉpÉ^Å[ÉìÇ™ïœÇÌÇÍÇŒÅCì_ìîèÛë‘Ç™ïœâªÇ∑ÇÈèäÅj
+    LED_GO==1
+        âEâÒì]
+    LED_GO==2
+        ç∂âÒì]
+    LED_GO==3
+        ì_ñ≈
+
+        :
+        :
+        :
+
+    ã@î\Çí«â¡ÇµÇΩÇÁLED_GOÇÃílÇëùÇ‚Ç∑
+
+Cycle   : ì_ñ≈Ç®ÇÊÇ—âÒì]é¸ä˙Åi1âÒì]Ç…Ç©Ç©ÇÈéûä‘) 	** íPà ÇÕÉ~Éäïb
+Cycle_t : ì_ñ≈Ç®ÇÊÇ—âÒì]Çë±ÇØÇÈéûä‘Å@			** íPà ÇÕïb
+tail    : LEDÇâÒì]ì_ìîÇ≥ÇπÇÈÇ∆Ç´ÇÃîˆÇÃåıÇÃã≠Ç≥Åié¿ëïÇÕÇ∑ÇÈÇ©ÇÌÇ©ÇÁÇ»Ç¢Åj
+(àÍÇ¬ëOÇÃñæÇÈÇ≥Ç…ëŒÇµÇƒ[tail]%ÇÃó\íËÅj
+
+"""
+
 import os, sys, inspect,time
+from time import sleep
 
+import viewer
+from viewer import led_status
 
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 arch_dir = 'lib/x64' if sys.maxsize > 2**32 else 'lib/x86'
@@ -14,19 +111,19 @@ src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 lib_dir = os.path.abspath(os.path.join(src_dir, 'lib'))
 sys.path.insert(0, lib_dir)
 
+
 import socket,json
 #  UDP communication
 #raspberry pi ip address
-UDP_IP="127.0.1.1"
 UDP_IP="192.168.43.12"
 UDP_PORT=5005
 
 """""""""""""""
-ÂÆöÊï∞ÂÆöÁæ©
-PITCH_MAX:xËª∏ÊñπÂêë„ÅÆÊúÄÂ§ßËßíÂ∫¶
-PITCH_MIN:xËª∏ÊñπÂêë„ÅÆÊúÄÂ∞èËßíÂ∫¶
-ROLL_RIGHT:Âè≥„Å´ÂÄí„Åó„ÅüÊôÇ„ÅÆÊúÄÂ§ßËßíÂ∫¶(Ë≤†„ÅÆÂÄ§Ôºâ
-ROLL_LEFT:Â∑¶„Å´ÂÄí„Åó„ÅüÊôÇ„ÅÆÊúÄÂ∞èËßíÂ∫¶(Ê≠£„ÅÆÂÄ§Ôºâ
+íËêîíËã` Motor
+PITCH_MAX:xé≤ï˚å¸ÇÃç≈ëÂäpìx
+PITCH_MIN:xé≤ï˚å¸ÇÃç≈è¨äpìx
+ROLL_RIGHT:âEÇ…ì|ÇµÇΩéûÇÃç≈ëÂäpìx(ïâÇÃílÅj
+ROLL_LEFT:ç∂Ç…ì|ÇµÇΩéûÇÃç≈è¨äpìx(ê≥ÇÃílÅj
 
 """""""""""""""
 PITCH_MAX=0.8
@@ -34,6 +131,39 @@ PITCH_MIN=-0.8
 ROLL_RIGHT=-1.2
 ROLL_LEFT=1.2
 
+"""""""""""""""
+íËêîíËã` LED
+Y_MAX:ç≈ëÂÇÃçÇÇ≥
+Y_MIN:ç≈è¨ÇÃçÇÇ≥
+
+LEDÇÃëóêMÉfÉÖÅ[ÉeÉBÅ[î‰ÇÃç≈ëÂÅF254
+LEDÇÃëóêMÉfÉÖÅ[ÉeÉBÅ[î‰ÇÃç≈è¨ÅF0
+
+('message', '0,0,0,254,254,254,254,254,254,254,254,254,0')
+
+"""""""""""""""
+Y_MAX=430
+Y_MIN=40
+
+#test
+
+Mode=2
+LED_GO=4
+Cycle=200
+Cycle_t=3
+
+#LED Global
+current=0
+before =0
+p=0
+#pwm Global
+pwm=[0 for i in range(13)]
+pwm[0]=3.14
+
+status=[i for i in range(13)]
+
+#LEDÇÃñæÇÈÇ≥ÇÃç≈ëÂíl
+LED_B_MAX=254
 
 def is_json(myjson):
     try:
@@ -48,54 +178,205 @@ def send(message):
 
 import Leap
 class SampleListener(Leap.Listener):
-
     def on_connect(self,controller):
         print "connected"
-        
     def on_frame(self,controller):
-        print "Frame available"
         frame=controller.frame()
+        print("on frame")
         hand = frame.hands.rightmost
-        #Wait()
-        pitch = hand.direction.pitch
-        #hands 
-        for hand in frame.hands:
-            
-            pitch = hand.direction.pitch
-            roll = hand.palm_normal.roll
-            #morter control
-            #hand_name = "Left hand" if hand.is_left else "Right hand"
-            MotorControl(pitch,roll)       
+        finger=frame.finger
 
-def Wait():
-    #ÁÑ°Èôê„É´„Éº„Éó„ÅÆË°®Á§∫ÊÑüË¶ö„ÇíÈÅÖ„Åè„Åô„Çã
-    for num, i in enumerate(range(100)):
-            sys.stdout.flush()
-            time.sleep(0.01)
+        #tkinter Global
+        global led_status
+        global Mode
+        global status
+        global Cycle
+        global Cycle_t
+        global tail
+        #leap Global
+        global pwm
+        
+        status= init_status(status)
+        pwm   = [0 for i in range(13)]
+        #pwm[0]=3.14
+        led_status[4]= 50
+        #menu
+        """
+        frame,hand
+        """
 
-#================================„É¢„Éº„Çø„ÉºÂà∂Âæ°====================================#
-def MotorControl(pitch,roll):
+
+        #LED
+        if   Mode == 1:
+            #ëSïîì_ìîÇï€Ç¬ 
+            pwm=Led_All(LED_B_MAX)
+            Led_Menu(LED_GO,frame,hand)
+        elif Mode == 2:
+            Led_Menu(LED_GO,frame,hand)
+
+        elif Mode == 100:
+            for hand in frame.hands:
+                pitch = hand.direction.pitch
+                roll = hand.palm_normal.roll
+                #morter control
+                #hand_name = "Left hand" if hand.is_left else "Right hand"
+                MoterControl(pitch,roll)
+        """   
+        elif Mode == 101:
+        
+        #Secret Command
+    	elif Mode == 200:
+    	"""
+def init_status(status):
+    status=[0 for i in range(13)]
+    return status
+
+def init_pwm(pwm):
+    pwm=[0 for i in range(9)]
+    return [0 for i in range(9)]
+
+def Led_Menu(LED_GO,frame,hand):
+    global pwm
+    global Cycle
+    global Cycle_t
+    global led_status
+    if Mode == 1:
+        if LED_GO == 3:
+            Led_Flash(pwm,Cycle,Cycle_t)
+        elif LED_GO == 4:
+            Led_Flash_update(pwm,Cycle,Cycle_t)
+    if Mode == 2:
+        if LED_GO == 3:
+            for hand in frame.hands:
+                pointable = frame.pointables.frontmost
+                position = pointable.tip_position
+                y=position.y #variable=vector.(x,y,z)
+                #print(y)
+                #position.y.range = 40 to 430
+                #LED: 0 to 254 
+                p=Led_Brightness(y)
+                pwm=init_Led_status(p)
+                #print(p)
+                Led_Flash(pwm,Cycle,Cycle_t)
+        elif LED_GO == 4:
+            for hand in frame.hands:
+                pointable = frame.pointables.frontmost
+                position = pointable.tip_position
+                y=position.y #variable=vector.(x,y,z)
+                #print(y)
+                #position.y.range = 40 to 430
+                #LED: 0 to 254 
+                p=Led_Brightness(y)
+                pwm=init_Led_status(p)
+                print(led_status)
+                print(pwm)
+                Led_Flash_update(pwm,Cycle,Cycle_t)
+
+
+def Led_All(p):
+    pwm=[p for i in range(9)]
+    return pwm
+
+def Led_Brightness(y):
+    p=(254.0/(Y_MAX - Y_MIN))*(y-Y_MIN)
+    #àÍî éÆ
+    #a-b ÇÃîÕàÕÇÃéû x=254/(b-a)*(y-a))
+    if p>254:
+        p=254
+    elif p<0:
+        p=0
+    return p
+
+def init_Led_status(p):
+    global led_status
+    global pwm
+    for i in range(9):
+        if led_status[i] != 0 : pwm[i]=int(p)
+    return pwm
+
+def Led_Flash(pwm,n,m):
+    #LEDÇ™mainÇ≈éÊìæÇµÇΩèÛë‘Çï€ÇøÇ»Ç™ÇÁé¸ä˙nÉ~ÉäïbÇ≈mïbì_ñ≈Ç∑ÇÈ.
+    #global led_status
+    pwm_current=pwm
+    print(pwm_current)
+    n=n*0.0005
+    m/=2
+    count=0
+    while(True):
+        pwm=[0 for i in range(9)]
+        L_status_update(pwm)
+        
+        sleep(n)
+        pwm=[pwm_current[i] for i in range(9)]
+        L_status_update(pwm)
+        if count==(m/n):
+            break
+        count+=1
+        sleep(n)
+    pwm=pwm_current
+    L_status_update(pwm)
+
+def Led_Flash_update(pwm,n,m):
+    #LEDÇ™åªç›(éÊìæÇµÇΩèÛë‘ÅjÇÃèÛë‘Ç"""çXêVÇµë±ÇØÇ»Ç™ÇÁ"""é¸ä˙nÉ~ÉäïbÇ≈mïbì_ñ≈Ç∑ÇÈ.
+    pwm_current=pwm
+    print(pwm_current)
+    n=n*0.0005
+    global count
+    pwm=[0 for i in range(9)]
+    L_status_update(pwm)
+    sleep(n)
+    pwm=[pwm_current[i] for i in range(9)]
+    L_status_update(pwm)
+    sleep(n) 
+
+def L_status_update(pwm):
+    for i in range(9):
+        led_status[i]=pwm[i]
+    print(led_status)
+    status=Led_Status_Convert(pwm)
+    print "status={}".format(status)
+    Led_Send(status)
+
+
+def Led_Status_Convert(led_status):
+    global status
+    print(led_status)
+    for i in range(9):
+        status[i+4] = led_status[i]
+    return status
+
+def Led_Send(pwm):
+    #print "pwm={}".format(pwm)
+    #LED SEND BEGIN
+    pwm_str=map(str,pwm)
+    mes=','.join(pwm_str)
+    send(mes)
+    #LED SEND END
+
+
+def MoterControl(pitch,roll):
     #print "hand:x:{}".format(pitch)
     speed=forward(pitch)
     #print "{}".format(roll)
     duty_right=duty(roll)
-    #print "Âè≥ÂÅ¥„ÅÆ„Éá„É•„Éº„ÉÜ„Ç£„ÉºÊØî„ÅØ{}%".format(duty_right)
+    #print "âEë§ÇÃÉfÉÖÅ[ÉeÉBÅ[î‰ÇÕ{}%".format(duty_right)
     duty_left=100-duty_right
-    r,l = speed * duty_right *0.01, speed * duty_left  *0.01
-    
-    #print "right:{0},left:{1}".format()
-    Motor_Send([r,l,r,l])
+    speed_right = speed * duty_right *0.01
+    speed_left  = speed * duty_left  *0.01
+    #print "right:{0},left:{1}".format(speed_right,speed_left)
+    status=Motor_Status_Convert(speed_right,speed_left)
+    Motor_Send(status)
+
 
 """
-forward   : ÂâçÈÄ≤„Çπ„Éî„Éº„ÉâÂà∂Âæ°„ÄÄ
-left „ÄÄ   : ÂæåÈÄ≤„Çπ„Éî„Éº„ÉâÂà∂Âæ°
-ConvertSP : ËßíÂ∫¶‚Üí„Çπ„Éî„Éº„ÉâÂ§âÊèõÈñ¢Êï∞
+forward   : ëOêiÉXÉsÅ[Éhêßå‰Å@
+left Å@   : å„êiÉXÉsÅ[Éhêßå‰
+ConvertSP : äpìxÅ®ÉXÉsÅ[Éhïœä∑ä÷êî
 *ConvertSP:
         
 """
-#====================================ÂâçÈÄ≤Âà∂Âæ°====================================#
 def forward(pitch):
-    #ÂâçÈÄ≤
+    #ëOêi
     
     if pitch > PITCH_MAX :
         #print "STOP"
@@ -109,10 +390,7 @@ def forward(pitch):
         speed=100
     return speed
     #send('{"right":{0},"left":{1}}'.format(speed,speed))
-    pwm=[speed,speed]
-    Motor_Send(pwm)
 
-#====================================ÂæåÈÄ≤Âà∂Âæ°====================================#
 def back(pitch):
     
     if pitch > PITCH_MAX :
@@ -129,56 +407,64 @@ def back(pitch):
 
     return speed
     #send('{"right":{0},"left":{1}}'.format(speed,speed))
-    pwm=[speed,speed]
-    Motor_Send(pwm)
 
-#==================================ËßíÂ∫¶/ÈÄüÂ∫¶Â§âÊèõ==================================#
 def ConvertSP(speed):
     speed=-62.5*(speed-PITCH_MAX)
     return speed
 
-#==================================Â∑¶Âè≥ÊñπÂêëÂà∂Âæ°==================================#
-#Âè≥„É¢„Éº„Çø„ÉºÂõûËª¢Áéá„ÇíÁÆóÂá∫„Åô„ÇãÈñ¢Êï∞ÂõûËª¢Áéá[duty]%
-#Â∑¶„ÅÆÂõûËª¢Áéá=100-Âè≥„ÅÆÂõûËª¢Áéá
+
 def duty(roll):
+    #âEÉÇÅ[É^Å[âÒì]ó¶ÇéZèoÇ∑ÇÈä÷êîâÒì]ó¶[duty]%
+    #ç∂ÇÃâÒì]ó¶=100-âEÇÃâÒì]ó¶
     if roll > ROLL_LEFT:
-        #print "„Åì„Çå‰ª•‰∏äÂ∑¶„Å´ÂÄí„Åó„Å¶„ÇÇÊÑèÂë≥„Å™„ÅÑ„Çà"
+        #print "Ç±ÇÍà»è„ç∂Ç…ì|ÇµÇƒÇ‡à”ñ°Ç»Ç¢ÇÊ"
         duty = 0
     elif roll > ROLL_RIGHT:
-        #print "‰∏≠Èñì"
+        #print "íÜä‘"
         duty = ConvertDuty(roll)
     else :
-        #print "„Åì„Çå‰ª•‰∏äÂè≥„Å´ÂÄí„Åó„Å¶„ÇÇÊÑèÂë≥„Å™„ÅÑ„Çà"
+        #print "Ç±ÇÍà»è„âEÇ…ì|ÇµÇƒÇ‡à”ñ°Ç»Ç¢ÇÊ"
         duty = 100
     return duty
-        
-#===========================Â∑¶Âè≥ÊñπÂêëËßíÂ∫¶/„Éá„É•„Éº„ÉÜ„Ç£„ÉºÊØîÂ§âÊèõ==========================#    
+  
 def ConvertDuty(roll):
     x = roll+ROLL_LEFT
     y = (100*x)/(ROLL_LEFT-ROLL_RIGHT)
     return y
+ 
+def Motor_Status_Convert(right,left):
+    for i in range(4):
+        if i%2==0 : status[i] = int(right)
+        if i%2==1 : status[i] = int(left)
+    return status
 
-#MotorSend
 def Motor_Send(pwm):
-    print "pwm={}".format(pwm)
+    #print "pwm={}".format(pwm)
     #LED SEND BEGIN
     pwm_str=map(str,pwm)
     mes=','.join(pwm_str)
     send(mes)
     #LED SEND END
+
 def main():
+    global led_status
     listener=SampleListener()
     controller=Leap.Controller()
-    
     controller.add_listener(listener)
-    controller.set_policy(controller.POLICY_BACKGROUND_FRAMES)
+    controller.set_policy(Leap.Controller.POLICY_BACKGROUND_FRAMES)
     controller.set_policy(controller.POLICY_IMAGES)
     controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)
-    
+    print("start listener")
 
     #Controller.set_policy
-#    frame=controller.frame()
-    pointable =frame.pointables.frontmost
+    """
+    v=viewer.viewer()
+    v.setDaemon(True)
+    v.start()
+    frame=controller.frame()
+    """
+    """
+    pointable = frame.pointables.frontmost
     direction = pointable.direction
     length = pointable.length
     width = pointable.width
@@ -187,8 +473,8 @@ def main():
     speed = pointable.tip_velocity
     touchDistance = pointable.touch_distance
     zone = pointable.touch_zone
-
-    
+    """
+    while True: pass
     print "Press Enter to Quit"
     try:
         sys.stdin.readline()
@@ -196,7 +482,6 @@ def main():
         pass
     finally:
         controller.remove_listener(listener)
-
+    
 if __name__=='__main__':
     main()
-
