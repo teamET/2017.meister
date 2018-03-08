@@ -189,7 +189,7 @@ class SampleListener(Leap.Listener):
                 roll = hand.palm_normal.roll
                 #morter control
                 #hand_name = "Left hand" if hand.is_left else "Right hand"
-                MoterControl(pitch,roll)
+                MotorControl_2(pitch,roll)
         """   
         elif Mode == 101:
         
@@ -240,7 +240,6 @@ def Led_Menu(LED_GO,frame,hand):
                 print(led_status)
                 print(pwm)
                 Led_Flash_update(pwm,Cycle,Cycle_t)
-
 
 def Led_All(p):
     pwm=[p for i in range(9)]
@@ -306,7 +305,6 @@ def L_status_update(pwm):
     print "status={}".format(status)
     Led_Send(status)
 
-
 def Led_Status_Convert(led_status):
     global status
     print(led_status)
@@ -322,7 +320,6 @@ def Led_Send(pwm):
     send(mes)
     #LED SEND END
 
-
 def MoterControl(pitch,roll):
     #print "hand:x:{}".format(pitch)
     speed=forward(pitch)
@@ -335,15 +332,24 @@ def MoterControl(pitch,roll):
     #print "right:{0},left:{1}".format(speed_right,speed_left)
     status=Motor_Status_Convert(speed_right,speed_left)
     Motor_Send(status)
+    """
+    forward   : 前進スピード制御　
+    left 　   : 後進スピード制御
+    ConvertSP : 角度→スピード変換関数
+    *ConvertSP:
 
+    """
 
-"""
-forward   : 前進スピード制御　
-left 　   : 後進スピード制御
-ConvertSP : 角度→スピード変換関数
-*ConvertSP:
-        
-"""
+def MotorControl_2(pitch,roll):
+    speed=forward_back(pitch)
+    duty_right=duty(roll)
+    duty_left=100-duty_right
+    speed_right = ConvertSP2(speed * duty_right *0.01)
+    speed_left  = ConvertSP2(speed * duty_left  *0.01)
+
+    status=Motor_Status_Convert(speed_right,speed_left)
+    Motor_Send(status)
+
 def forward(pitch):
     #前進
     
@@ -377,6 +383,19 @@ def back(pitch):
     return speed
     #send('{"right":{0},"left":{1}}'.format(speed,speed))
 
+def forward_back(pitch):
+    #print "pitch={}".format(pitch)
+    if pitch > PITCH_MAX :
+        speed = -254
+
+    elif pitch > PITCH_MIN:
+        speed=ConvertSP_fb(pitch)
+        #print "speed: {}".format(speed)
+    else:
+        #print "MAX"
+        speed= 254
+    return speed
+
 def ConvertSP(speed):
     speed=-62.5*(speed-PITCH_MAX)
     return speed
@@ -387,6 +406,17 @@ def ConvertSP2(speed):
     speed=5.08*speed
     if speed > 254:
         speed=254
+    
+    if speed < -254:
+        speed=-254
+
+    if speed < 50 and speed >-70 :
+        speed = 0
+    
+    return speed
+
+def ConvertSP_fb(speed):
+    speed= -254 / PITCH_MAX * speed
     return speed
 
 def duty(roll):
@@ -436,6 +466,8 @@ def main():
     v=viewer.viewer()
     v.setDaemon(True)
     v.start()
+
+    while True : pass
     #frame=controller.frame()
     pointable = frame.pointables.frontmost
     direction = pointable.direction
