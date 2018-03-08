@@ -77,6 +77,14 @@ from time import sleep
 
 import viewer
 from viewer import led_status
+from viewer import shared
+LED_GO=shared[0]
+Mode=shared[1]
+Cycle=shared[2]
+brightness=shared[3]
+print(id(LED_GO))
+
+
 
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 arch_dir = 'lib/x64' if sys.maxsize > 2**32 else 'lib/x86'
