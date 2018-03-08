@@ -12,64 +12,64 @@ GUI_LeapMotion Specification 3/6/2018 S.Hirose
             LED3    LED4    LED5
             LED6    LED7    LED8
 2.Variables
-led_status : LEDã®ãƒ‡ãƒ¼ã‚¿ï¼ˆç¾åœ¨çŠ¶æ…‹ï¼‰List[ [now] for i in range(9)]
-             userãŒæ±ºã‚ãŸLED_patternã‚’æ ¼ç´ã™ã‚‹
+led_status : LED‚Ìƒf[ƒ^iŒ»İó‘ÔjList[ [now] for i in range(9)]
+             user‚ªŒˆ‚ß‚½LED_pattern‚ğŠi”[‚·‚é
              0 1 2
              3 4 5
              6 7 8
-Mode	   :ã€€Modeã®ç•ªå·ã«ã‚ˆã£ã¦æ©Ÿèƒ½ãŒå¤‰åŒ–ã™ã‚‹ï¼
- Modeã¯ä¸»ã«LeapMotionã§ã®æ©Ÿèƒ½ã®åˆ‡ã‚Šæ›¿ã‚ã‚Šã«åˆ©ç”¨ã™ã‚‹
-Mode : menu ã®ã‚¤ãƒ¡ãƒ¼ã‚¸
-    Mode == 0~99 ï¼šã€€LED
+Mode	   :@Mode‚Ì”Ô†‚É‚æ‚Á‚Ä‹@”\‚ª•Ï‰»‚·‚éD
+ Mode‚Íå‚ÉLeapMotion‚Å‚Ì‹@”\‚ÌØ‚è‘Ö‚í‚è‚É—˜—p‚·‚é
+Mode : menu ‚ÌƒCƒ[ƒW
+    Mode == 0~99 F@LED
     Mode==0
-        LEDãƒ¢ãƒ¼ãƒ‰ã€€ï¼ˆLeapMotionå´ã§LEDãƒ¢ãƒ¼ãƒ‰ã«åˆ‡ã‚Šæ›¿ã‚ã‚‹ï¼‰
+        LEDƒ‚[ƒh@iLeapMotion‘¤‚ÅLEDƒ‚[ƒh‚ÉØ‚è‘Ö‚í‚éj
     Mode==1
-        ç‚¹ç¯ãƒ‘ã‚¿ãƒ¼ãƒ³ãŒå¤‰ã‚ã£ã¦ã‚‚ï¼Œå…¨éƒ¨ç‚¹ç¯ã—ãŸçŠ¶æ…‹ã‚’ä¿ã¤
+        “_“”ƒpƒ^[ƒ“‚ª•Ï‚í‚Á‚Ä‚àC‘S•”“_“”‚µ‚½ó‘Ô‚ğ•Û‚Â
     Mode==2
-        æ‰‹ã®é«˜ã•ã«ã‚ˆã£ã¦LEDã®ç‚¹ç¯çŠ¶æ…‹ãŒå¤‰åŒ–ã™ã‚‹
+        è‚Ì‚‚³‚É‚æ‚Á‚ÄLED‚Ì“_“”ó‘Ô‚ª•Ï‰»‚·‚é
     Mode==3
-        Swipeã«ã‚ˆã£ã¦LEDã®ç‚¹ç¯çŠ¶æ…‹ãŒå¤‰åŒ–ã™ã‚‹
+        Swipe‚É‚æ‚Á‚ÄLED‚Ì“_“”ó‘Ô‚ª•Ï‰»‚·‚é
     Mode==4
-        æ‰‹ã®ããƒ¼ã±ãƒ¼ã«ã‚ˆã£ã¦LEDã®ç‚¹ç¯çŠ¶æ…‹ãŒå¤‰åŒ–ã™ã‚‹
+        è‚Ì‚®[‚Ï[‚É‚æ‚Á‚ÄLED‚Ì“_“”ó‘Ô‚ª•Ï‰»‚·‚é
     Mode==5
         :
         :
-        ï¼š
-    æ©Ÿèƒ½ã‚’è¿½åŠ ã—ãŸã‚‰Mode==5~99ã«LEDã®åˆ¶å¾¡ã«é–¢ã™ã‚‹å‹•ä½œãŒå¤‰ã‚ã‚‹
+        F
+    ‹@”\‚ğ’Ç‰Á‚µ‚½‚çMode==5~99‚ÉLED‚Ì§Œä‚ÉŠÖ‚·‚é“®ì‚ª•Ï‚í‚é
 --------------------------------------------------------------
     Mode==100
-        ãƒ¢ãƒ¼ã‚¿ãƒ¼é§†å‹•ï¼ˆGO!)ã€€ï¼šã€€æ‰‹ã®è§’åº¦ã«å¯¾ã—ã¦ãƒ­ãƒ¼ãƒãƒ¼å‹•ããŒå¤‰ã‚ã‚‹
+        ƒ‚[ƒ^[‹ì“®iGO!)@F@è‚ÌŠp“x‚É‘Î‚µ‚Äƒ[ƒo[“®‚«‚ª•Ï‚í‚é
     Mode==101
-        ãƒ¢ãƒ¼ã‚¿ãƒ¼é§†å‹•ï¼ˆGO!)ã€€ï¼šã€€æ‰‹ã®ãƒ™ã‚¯ãƒˆãƒ«ã«å¯¾ã—ã¦ãƒ­ãƒ¼ãƒãƒ¼å‹•ããŒå¤‰ã‚ã‚‹
-    æ—‹å›ã¯Mode==100,101ã«å«ã¾ã‚Œã‚‹ã¨æ€ã†
+        ƒ‚[ƒ^[‹ì“®iGO!)@F@è‚ÌƒxƒNƒgƒ‹‚É‘Î‚µ‚Äƒ[ƒo[“®‚«‚ª•Ï‚í‚é
+    ù‰ñ‚ÍMode==100,101‚ÉŠÜ‚Ü‚ê‚é‚Æv‚¤
         :
         :
-    æ©Ÿèƒ½ã‚’è¿½åŠ ã—ãŸã‚‰Mode==100~199ã«ãƒ¢ãƒ¼ã‚¿ãƒ¼ã®åˆ¶å¾¡ã«é–¢ã™ã‚‹å‹•ä½œãŒå¤‰ã‚ã‚‹
+    ‹@”\‚ğ’Ç‰Á‚µ‚½‚çMode==100~199‚Éƒ‚[ƒ^[‚Ì§Œä‚ÉŠÖ‚·‚é“®ì‚ª•Ï‚í‚é
 -------------------------------------------------------------
     Mode==200
-        éš ã—ã‚³ãƒãƒ³ãƒ‰01 : éŸ³æ¥½ï¼ˆï¼Ÿ)ã€€
+        ‰B‚µƒRƒ}ƒ“ƒh01 : ‰¹ŠyiH)@
         :
         :
-    æ©Ÿèƒ½ã‚’è¿½åŠ ã—ãŸã‚‰Mode==200~299ã«éš ã—ã‚³ãƒãƒ³ãƒ‰ã«é–¢ã™ã‚‹å‹•ä½œã‚’ã™ã‚‹
-status     : ã™ã¹ã¦ã®ãƒ‡ãƒ¼ã‚¿(ç¾åœ¨çŠ¶æ…‹)List[[now] for i in range(14)]
-    ã“ã‚Œã‚’Sendã™ã‚‹(Send Dataã¯ä¸Šã‚’å‚ç…§)
-LED_GO	   : LEDã®ç‚¹ç¯æ–¹æ³•ã‚’å¤‰åŒ–ã•ã›ã‚‹å¤‰æ•°
+    ‹@”\‚ğ’Ç‰Á‚µ‚½‚çMode==200~299‚É‰B‚µƒRƒ}ƒ“ƒh‚ÉŠÖ‚·‚é“®ì‚ğ‚·‚é
+status     : ‚·‚×‚Ä‚Ìƒf[ƒ^(Œ»İó‘Ô)List[[now] for i in range(14)]
+    ‚±‚ê‚ğSend‚·‚é(Send Data‚Íã‚ğQÆ)
+LED_GO	   : LED‚Ì“_“”•û–@‚ğ•Ï‰»‚³‚¹‚é•Ï”
     LED_GO==0
-        æ™®é€šã«å…¨éƒ¨ç‚¹ç¯ï¼ˆMode==1ã¨é•ã†ã®ã¯ï¼Œç‚¹ç¯ãƒ‘ã‚¿ãƒ¼ãƒ³ãŒå¤‰ã‚ã‚Œã°ï¼Œç‚¹ç¯çŠ¶æ…‹ãŒå¤‰åŒ–ã™ã‚‹æ‰€ï¼‰
+        •’Ê‚É‘S•”“_“”iMode==1‚Æˆá‚¤‚Ì‚ÍC“_“”ƒpƒ^[ƒ“‚ª•Ï‚í‚ê‚ÎC“_“”ó‘Ô‚ª•Ï‰»‚·‚éŠj
     LED_GO==1
-        å³å›è»¢
+        ‰E‰ñ“]
     LED_GO==2
-        å·¦å›è»¢
+        ¶‰ñ“]
     LED_GO==3
-        ç‚¹æ»…
+        “_–Å
         :
         :
         :
-    æ©Ÿèƒ½ã‚’è¿½åŠ ã—ãŸã‚‰LED_GOã®å€¤ã‚’å¢—ã‚„ã™
-Cycle   : ç‚¹æ»…ãŠã‚ˆã³å›è»¢å‘¨æœŸï¼ˆ1å›è»¢ã«ã‹ã‹ã‚‹æ™‚é–“) 	** å˜ä½ã¯ãƒŸãƒªç§’
-Cycle_t : ç‚¹æ»…ãŠã‚ˆã³å›è»¢ã‚’ç¶šã‘ã‚‹æ™‚é–“ã€€			** å˜ä½ã¯ç§’
-tail    : LEDã‚’å›è»¢ç‚¹ç¯ã•ã›ã‚‹ã¨ãã®å°¾ã®å…‰ã®å¼·ã•ï¼ˆå®Ÿè£…ã¯ã™ã‚‹ã‹ã‚ã‹ã‚‰ãªã„ï¼‰
-(ä¸€ã¤å‰ã®æ˜ã‚‹ã•ã«å¯¾ã—ã¦[tail]%ã®äºˆå®šï¼‰
+    ‹@”\‚ğ’Ç‰Á‚µ‚½‚çLED_GO‚Ì’l‚ğ‘‚â‚·
+Cycle   : “_–Å‚¨‚æ‚Ñ‰ñ“]üŠúi1‰ñ“]‚É‚©‚©‚éŠÔ) 	** ’PˆÊ‚Íƒ~ƒŠ•b
+Cycle_t : “_–Å‚¨‚æ‚Ñ‰ñ“]‚ğ‘±‚¯‚éŠÔ@			** ’PˆÊ‚Í•b
+tail    : LED‚ğ‰ñ“]“_“”‚³‚¹‚é‚Æ‚«‚Ì”ö‚ÌŒõ‚Ì‹­‚³iÀ‘•‚Í‚·‚é‚©‚í‚©‚ç‚È‚¢j
+(ˆê‚Â‘O‚Ì–¾‚é‚³‚É‘Î‚µ‚Ä[tail]%‚Ì—\’èj
 """
 
 import os, sys, inspect,time
@@ -78,14 +78,13 @@ from time import sleep
 import viewer
 from viewer import led_status
 from viewer import shared
-LED_GO=shared[0]
-Mode=shared[1]
-Cycle=shared[2]
-brightness=shared[3]
+
+LED_GO  = shared[0]
+Mode    = shared[1]
+Cycle   = shared[2]
+Cycle_t = shared[3] #changed variable name
+
 print(id(LED_GO))
-
-
-
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 arch_dir = 'lib/x64' if sys.maxsize > 2**32 else 'lib/x86'
 sys.path.insert(0, os.path.abspath(os.path.join(src_dir, arch_dir)))
@@ -102,11 +101,11 @@ UDP_IP="192.168.43.12"
 UDP_PORT=5005
 
 """""""""""""""
-å®šæ•°å®šç¾© Motor
-PITCH_MAX:xè»¸æ–¹å‘ã®æœ€å¤§è§’åº¦
-PITCH_MIN:xè»¸æ–¹å‘ã®æœ€å°è§’åº¦
-ROLL_RIGHT:å³ã«å€’ã—ãŸæ™‚ã®æœ€å¤§è§’åº¦(è² ã®å€¤ï¼‰
-ROLL_LEFT:å·¦ã«å€’ã—ãŸæ™‚ã®æœ€å°è§’åº¦(æ­£ã®å€¤ï¼‰
+’è”’è‹` Motor
+PITCH_MAX:x²•ûŒü‚ÌÅ‘åŠp“x
+PITCH_MIN:x²•ûŒü‚ÌÅ¬Šp“x
+ROLL_RIGHT:‰E‚É“|‚µ‚½‚ÌÅ‘åŠp“x(•‰‚Ì’lj
+ROLL_LEFT:¶‚É“|‚µ‚½‚ÌÅ¬Šp“x(³‚Ì’lj
 """""""""""""""
 PITCH_MAX=0.8
 PITCH_MIN=-0.8
@@ -114,22 +113,23 @@ ROLL_RIGHT=-1.2
 ROLL_LEFT=1.2
 
 """""""""""""""
-å®šæ•°å®šç¾© LED
-Y_MAX:æœ€å¤§ã®é«˜ã•
-Y_MIN:æœ€å°ã®é«˜ã•
-LEDã®é€ä¿¡ãƒ‡ãƒ¥ãƒ¼ãƒ†ã‚£ãƒ¼æ¯”ã®æœ€å¤§ï¼š254
-LEDã®é€ä¿¡ãƒ‡ãƒ¥ãƒ¼ãƒ†ã‚£ãƒ¼æ¯”ã®æœ€å°ï¼š0
+’è”’è‹` LED
+Y_MAX:Å‘å‚Ì‚‚³
+Y_MIN:Å¬‚Ì‚‚³
+LED‚Ì‘—Mƒfƒ…[ƒeƒB[”ä‚ÌÅ‘åF254
+LED‚Ì‘—Mƒfƒ…[ƒeƒB[”ä‚ÌÅ¬F0
 ('message', '0,0,0,254,254,254,254,254,254,254,254,254,0')
 """""""""""""""
 Y_MAX=430
 Y_MIN=40
 
 #test
-
-Mode=100
-LED_GO=4
-Cycle=200
-Cycle_t=3
+"""
+Mode=0
+LED_GO=0
+Cycle=0
+Cycle_t=0
+"""
 
 #LED Global
 current=0
@@ -140,7 +140,9 @@ pwm=[0 for i in range(13)]
 
 status=[i for i in range(13)]
 
-#LEDã®æ˜ã‚‹ã•ã®æœ€å¤§å€¤
+tail=0
+
+#LED‚Ì–¾‚é‚³‚ÌÅ‘å’l
 LED_B_MAX=254
 
 def is_json(myjson):
@@ -174,23 +176,33 @@ class SampleListener(Leap.Listener):
         #leap Global
         global pwm
         
-        #status= init_status(status)
+        status= init_status(status)
         pwm   = init_pwm(pwm)
-        led_status[4]= 50
         #menu
         """
         frame,hand
         """
-
+        print ('############main Mode222222222',Mode,id(Mode),id(viewer.Mode))
 
         #LED
         if   Mode == 1:
-            #å…¨éƒ¨ç‚¹ç¯ã‚’ä¿ã¤ 
+            #‘S•”“_“”‚ğ•Û‚Â 
             pwm=Led_All(LED_B_MAX)
             Led_Menu(LED_GO,frame,hand)
         elif Mode == 2:
             Led_Menu(LED_GO,frame,hand)
-            
+        elif Mode == 5:
+            for hand in frame.hands:
+                strength = hand.grab_strength
+                hand_identifier = hand.id
+                hand_name = "Left hand" if hand.is_left else "Right hand"
+                if hand_name=="Right hand" and strength == 1.0:
+                    print"Right hand"
+                    Led_Spin_Right(pwm,Cycle,Cycle_t,tail)
+                if hand_name=="Left hand" and strength == 1.0:
+                    print "Left Hand"
+                    Led_Spin_Left(pwm,Cycle,Cycle_t,tail)
+
         elif Mode == 100:
             for hand in frame.hands:
                 pitch = hand.direction.pitch
@@ -219,9 +231,11 @@ def Led_Menu(LED_GO,frame,hand):
     global led_status
     if Mode == 1:
         if LED_GO == 3:
+            print"hello world"
             Led_Flash(pwm,Cycle,Cycle_t)
         elif LED_GO == 4:
             Led_Flash_update(pwm,Cycle,Cycle_t)
+
     if Mode == 2:
         if LED_GO == 3:
             for hand in frame.hands:
@@ -255,13 +269,41 @@ def Led_All(p):
 
 def Led_Brightness(y):
     p=(254.0/(Y_MAX - Y_MIN))*(y-Y_MIN)
-    #ä¸€èˆ¬å¼
-    #a-b ã®ç¯„å›²ã®æ™‚ x=254/(b-a)*(y-a))
+    #ˆê”Ê®
+    #a-b ‚Ì”ÍˆÍ‚Ì x=254/(b-a)*(y-a))
     if p>254:
         p=254
     elif p<0:
         p=0
     return p
+
+def Led_Spin_Right(pwm,n,p,tail):
+    #Nƒ~ƒŠ•b‚Å1‰ñ“]‚·‚é(Œv‰ñ‚è)
+    #p‚ÍŒõ‚Ì–¾‚é‚³
+    #tail‚Í”ö‚Ì’·‚³
+    #atode
+    n*=0.000125
+    round_order=[1,2,5,8,7,6,3,0]
+    pwm=init_pwm(pwm)
+    for i in range(8):
+        pwm=init_pwm(pwm)
+        pwm[round_order[i]]=p
+        L_status_update(pwm)
+        sleep(n)
+
+def Led_Spin_Left(pwm,n,p,tail):
+    #Nƒ~ƒŠ•b‚Å1‰ñ“]‚·‚é(”¼Œv‰ñ‚è)
+    #p‚ÍŒõ‚Ì–¾‚é‚³
+    #tail‚Í”ö‚Ì’·‚³
+    #atode
+    n*=0.000125
+    round_order=[1,0,3,6,7,8,5,2]
+    pwm=init_pwm(pwm)
+    for i in range(8):
+        pwm=init_pwm(pwm)
+        pwm[round_order[i]]=p
+        L_status_update(pwm)
+        sleep(n)
 
 def init_Led_status(p):
     global led_status
@@ -271,7 +313,7 @@ def init_Led_status(p):
     return pwm
 
 def Led_Flash(pwm,n,m):
-    #LEDãŒmainã§å–å¾—ã—ãŸçŠ¶æ…‹ã‚’ä¿ã¡ãªãŒã‚‰å‘¨æœŸnãƒŸãƒªç§’ã§mç§’ç‚¹æ»…ã™ã‚‹.
+    #LED‚ªmain‚Åæ“¾‚µ‚½ó‘Ô‚ğ•Û‚¿‚È‚ª‚çüŠúnƒ~ƒŠ•b‚Åm•b“_–Å‚·‚é.
     #global led_status
     pwm_current=pwm
     print(pwm_current)
@@ -293,7 +335,7 @@ def Led_Flash(pwm,n,m):
     L_status_update(pwm)
 
 def Led_Flash_update(pwm,n,m):
-    #LEDãŒç¾åœ¨(å–å¾—ã—ãŸçŠ¶æ…‹ï¼‰ã®çŠ¶æ…‹ã‚’"""æ›´æ–°ã—ç¶šã‘ãªãŒã‚‰"""å‘¨æœŸnãƒŸãƒªç§’ã§mç§’ç‚¹æ»…ã™ã‚‹.
+    #LED‚ªŒ»İ(æ“¾‚µ‚½ó‘Ôj‚Ìó‘Ô‚ğ"""XV‚µ‘±‚¯‚È‚ª‚ç"""üŠúnƒ~ƒŠ•b‚Åm•b“_–Å‚·‚é.
     pwm_current=pwm
     print(pwm_current)
     n=n*0.0005
@@ -333,7 +375,7 @@ def MoterControl(pitch,roll):
     speed=forward(pitch)
     #print "{}".format(roll)
     duty_right=duty(roll)
-    #print "å³å´ã®ãƒ‡ãƒ¥ãƒ¼ãƒ†ã‚£ãƒ¼æ¯”ã¯{}%".format(duty_right)
+    #print "‰E‘¤‚Ìƒfƒ…[ƒeƒB[”ä‚Í{}%".format(duty_right)
     duty_left=100-duty_right
     speed_right = ConvertSP2(speed * duty_right *0.01)
     speed_left  = ConvertSP2(speed * duty_left  *0.01)
@@ -341,11 +383,10 @@ def MoterControl(pitch,roll):
     status=Motor_Status_Convert(speed_right,speed_left)
     Motor_Send(status)
     """
-    forward   : å‰é€²ã‚¹ãƒ”ãƒ¼ãƒ‰åˆ¶å¾¡ã€€
-    left ã€€   : å¾Œé€²ã‚¹ãƒ”ãƒ¼ãƒ‰åˆ¶å¾¡
-    ConvertSP : è§’åº¦â†’ã‚¹ãƒ”ãƒ¼ãƒ‰å¤‰æ›é–¢æ•°
+    forward   : ‘OiƒXƒs[ƒh§Œä@
+    left @   : ŒãiƒXƒs[ƒh§Œä
+    ConvertSP : Šp“x¨ƒXƒs[ƒh•ÏŠ·ŠÖ”
     *ConvertSP:
-
     """
 
 def MotorControl_2(pitch,roll):
@@ -359,7 +400,7 @@ def MotorControl_2(pitch,roll):
     Motor_Send(status)
 
 def forward(pitch):
-    #å‰é€²
+    #‘Oi
     
     if pitch > PITCH_MAX :
         #print "STOP"
@@ -428,16 +469,16 @@ def ConvertSP_fb(speed):
     return speed
 
 def duty(roll):
-    #å³ãƒ¢ãƒ¼ã‚¿ãƒ¼å›è»¢ç‡ã‚’ç®—å‡ºã™ã‚‹é–¢æ•°å›è»¢ç‡[duty]%
-    #å·¦ã®å›è»¢ç‡=100-å³ã®å›è»¢ç‡
+    #‰Eƒ‚[ƒ^[‰ñ“]—¦‚ğZo‚·‚éŠÖ”‰ñ“]—¦[duty]%
+    #¶‚Ì‰ñ“]—¦=100-‰E‚Ì‰ñ“]—¦
     if roll > ROLL_LEFT:
-        #print "ã“ã‚Œä»¥ä¸Šå·¦ã«å€’ã—ã¦ã‚‚æ„å‘³ãªã„ã‚ˆ"
+        #print "‚±‚êˆÈã¶‚É“|‚µ‚Ä‚àˆÓ–¡‚È‚¢‚æ"
         duty = 0
     elif roll > ROLL_RIGHT:
-        #print "ä¸­é–“"
+        #print "’†ŠÔ"
         duty = ConvertDuty(roll)
     else :
-        #print "ã“ã‚Œä»¥ä¸Šå³ã«å€’ã—ã¦ã‚‚æ„å‘³ãªã„ã‚ˆ"
+        #print "‚±‚êˆÈã‰E‚É“|‚µ‚Ä‚àˆÓ–¡‚È‚¢‚æ"
         duty = 100
     return duty
   
