@@ -3,10 +3,13 @@ import threading,time
 import Tkinter
 #when you want to update color of led ,you should change this list like main()
 led_status=[0 for i in range(9)]
-LED_GO=0
-Mode=0
-Cycle=0
-brightness=0
+"""
+shared[0]=LED_GO
+shared[1]=Mode
+Cycle=share[2]
+brightness=shared[3]
+"""
+shared=[0 for i in range(4)]
 tail=0
 #koki start
 #B:button
@@ -16,7 +19,7 @@ tail=0
 def menu():
     menu = Tkinter.Tk()
     menu.title(u"menu")
-    menu.geometry("200x200")
+    menu.geometry("200x50")
 
     led =Tkinter.Button(menu,text=u'LED')
     led.bind("<Button-1>",ledM)
@@ -28,13 +31,13 @@ def menu():
 
 def motorM(event):
     def go_check(event):
-        Mode=100
-        print("Mode=",Mode)
+        shared[1]=100
+        print("Mode=",shared[1])
 	
-	global Mode
+	global shared
     menu=Tkinter.Tk()
     menu.title(u"Motor menu")
-    menu.geometry("200x200")
+    menu.geometry("200x50")
 
     goB=Tkinter.Button(menu,text=u'GO!')
     goB.bind("<Button-1>",go_check)
@@ -45,7 +48,7 @@ def ledM(event):
 
     menu=Tkinter.Tk()
     menu.title(u"led menu")
-    menu.geometry("200x200")
+    menu.geometry("220x100")
     
     brightnessB=Tkinter.Button(menu,text=u'Set Brightness')
     brightnessB.bind("<Button-1>",brightnessM)
@@ -88,15 +91,15 @@ def brightnessM(event):
 
 #gesture menu
 def gestureM(event):
-    global Mode
+    global shared
     def gesture_check(event):
-        Mode=int(eg.get())
-        print("Mode=",Mode)
+        shared[1]=int(eg.get())
+        print("Mode=",shared[1])
 
 
     menu=Tkinter.Tk()
     menu.title(u"gesture menu")
-    menu.geometry("200x200")
+    menu.geometry("200x130")
     
     eg=Tkinter.Entry(menu,width=1)
     eg.insert(Tkinter.END,"0")
@@ -116,30 +119,29 @@ def gestureM(event):
 
     check=Tkinter.Button(menu,text=u'OK')
     check.bind("<Button-1>",gesture_check)
-    check.place(x=125,y=0)
+    check.pack()
 
 #behavior menu
 def behaviorM(event):
     def behavior_check(event):
-        global Mode
-        global LED_GO
+        global shared
     	def cycle_check(event):
-            Cycle=int(ce.get())
-            brightness=int(brn.get())
+            shared[2]=int(ce.get())
+            shared[3]=int(brn.get())
             #tail=int(t,get())
-            print("Cycle=",Cycle," brightness=",brightness)
+            print("Cycle=",shared[2]," brightness=",shared[3])
     	#cycle_check end
 
     	ebnum=int(eb.get())+2
     	print("ebnum=",ebnum)
     	if ebnum==3 or ebnum==4:
-            LED_GO=ebnum
+            shared[0]=ebnum
     	elif ebnum==5:
-            Mode=ebnum
+            shared[1]=ebnum
 
             menu=Tkinter.Tk()
             menu.title(u"Set Cycle")
-            menu.geometry("200x200")
+            menu.geometry("220x100")
 
             ce=Tkinter.Entry(menu,width=4)
             ce.insert(Tkinter.END,"0")
@@ -167,15 +169,15 @@ def behaviorM(event):
             check.pack()
         #if end
 
-        print("Mode=",Mode)
-        print("LED_GO=",LED_GO)
+        print("Mode=",shared[1])
+        print("LED_GO=",shared[0])
         
            
     #behavior check end
 		        	
     menu=Tkinter.Tk()
     menu.title(u"behavior menu")
-    menu.geometry("200x200")
+    menu.geometry("200x120")
 
     eb=Tkinter.Entry(menu,width=1)
     eb.insert(Tkinter.END,"0")
@@ -198,7 +200,7 @@ def behaviorM(event):
 
     check=Tkinter.Button(menu,text=u'OK')
     check.bind("<Button-1>",behavior_check)
-    check.place(x=125,y=0)
+    check.pack()
 #behaviorM end
 
 def cycleM(event):
@@ -223,11 +225,7 @@ class viewer(threading.Thread):
         self.led_id=[]
         global led_id
         global led_status
-        global LED_GO
-        global Mode
-        global Cycle
-        global brightness
-        global tail
+        global shared
         self.init_led(self.h,self.w)
         menu()
  
