@@ -22,6 +22,22 @@ def menu():
     led.bind("<Button-1>",ledM)
     led.pack()
 
+    motor=Tkinter.Button(menu,text=u'Motor')
+    motor.bind("<Button-1>",motorM)
+    motor.pack()
+
+def motorM(event):
+	def go_check(event):
+            Mode=100
+	    print("Mode=",Mode)
+	menu=Tkinter.Tk()
+	menu.title(u"Motor menu")
+	menu.geometry("200x200")
+
+	goB=Tkinter.Button(menu,text=u'GO!')
+	goB.bind("<Button-1>",go_check)
+	goB.pack()
+
 #show ledmenu
 def ledM(event):
 
@@ -41,8 +57,6 @@ def ledM(event):
     behaviorB.bind("<Button-1>",behaviorM)
     behaviorB.pack()
     
-
-
 #brightness menu
 def brightnessM(event):
     def brightness_check(event):
