@@ -77,14 +77,12 @@ from time import sleep
 
 import viewer
 from viewer import led_status
-from viewer import shared
+from viewer import Mode
+print ('############main Mode11111111',Mode,id(Mode),id(viewer.Mode))
+from viewer import LED_GO
+from viewer import Cycle
+from viewer import Cycle_t
 
-LED_GO  = shared[0]
-Mode    = shared[1]
-Cycle   = shared[2]
-Cycle_t = shared[3] #changed variable name
-
-print(id(LED_GO))
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 arch_dir = 'lib/x64' if sys.maxsize > 2**32 else 'lib/x86'
 sys.path.insert(0, os.path.abspath(os.path.join(src_dir, arch_dir)))
@@ -198,10 +196,10 @@ class SampleListener(Leap.Listener):
                 hand_name = "Left hand" if hand.is_left else "Right hand"
                 if hand_name=="Right hand" and strength == 1.0:
                     print"Right hand"
-                    Led_Spin_Right(pwm,Cycle,Cycle_t,tail)
+                    Led_Spin_Right(pwm,Cycle,254,tail)
                 if hand_name=="Left hand" and strength == 1.0:
                     print "Left Hand"
-                    Led_Spin_Left(pwm,Cycle,Cycle_t,tail)
+                    Led_Spin_Left(pwm,Cycle,254,tail)
 
         elif Mode == 100:
             for hand in frame.hands:
@@ -238,6 +236,7 @@ def Led_Menu(LED_GO,frame,hand):
 
     if Mode == 2:
         if LED_GO == 3:
+            print"hello"
             for hand in frame.hands:
                 pointable = frame.pointables.frontmost
                 position = pointable.tip_position
