@@ -2,33 +2,25 @@
 
 """
 GUI_LeapMotion Specification 3/6/2018 S.Hirose
-
 1.Raspberry-pi-Send-Data List: send = [MotorFrontRight,MotorFrontLeft,MotorBackRight,MotorBackLeft, LED0,LED1,LED2,LED3,LED4,LED5,LED6,LED7,LED8]
-
                     Motor
         FrontLeft           FrontRight
         Back Left           Back Right
-
                     LED
                     
             LED0    LED1    LED2
             LED3    LED4    LED5
             LED6    LED7    LED8
 2.Variables
-
 led_status : LEDのデータ（現在状態）List[ [now] for i in range(9)]
              userが決めたLED_patternを格納する
              0 1 2
              3 4 5
              6 7 8
-
 Mode	   :　Modeの番号によって機能が変化する．
  Modeは主にLeapMotionでの機能の切り替わりに利用する
-
 Mode : menu のイメージ
-
     Mode == 0~99 ：　LED
-
     Mode==0
         LEDモード　（LeapMotion側でLEDモードに切り替わる）
     Mode==1
@@ -43,38 +35,25 @@ Mode : menu のイメージ
         :
         :
         ：
-
     機能を追加したらMode==5~99にLEDの制御に関する動作が変わる
-
 --------------------------------------------------------------
-
     Mode==100
         モーター駆動（GO!)　：　手の角度に対してローバー動きが変わる
     Mode==101
         モーター駆動（GO!)　：　手のベクトルに対してローバー動きが変わる
     旋回はMode==100,101に含まれると思う
-
         :
         :
-
     機能を追加したらMode==100~199にモーターの制御に関する動作が変わる
-
 -------------------------------------------------------------
-
     Mode==200
         隠しコマンド01 : 音楽（？)　
-
         :
         :
-
     機能を追加したらMode==200~299に隠しコマンドに関する動作をする
-
-
 status     : すべてのデータ(現在状態)List[[now] for i in range(14)]
     これをSendする(Send Dataは上を参照)
-
 LED_GO	   : LEDの点灯方法を変化させる変数
-
     LED_GO==0
         普通に全部点灯（Mode==1と違うのは，点灯パターンが変われば，点灯状態が変化する所）
     LED_GO==1
@@ -83,18 +62,14 @@ LED_GO	   : LEDの点灯方法を変化させる変数
         左回転
     LED_GO==3
         点滅
-
         :
         :
         :
-
     機能を追加したらLED_GOの値を増やす
-
 Cycle   : 点滅および回転周期（1回転にかかる時間) 	** 単位はミリ秒
 Cycle_t : 点滅および回転を続ける時間　			** 単位は秒
 tail    : LEDを回転点灯させるときの尾の光の強さ（実装はするかわからない）
 (一つ前の明るさに対して[tail]%の予定）
-
 """
 
 import os, sys, inspect,time
@@ -115,7 +90,7 @@ sys.path.insert(0, lib_dir)
 import socket,json
 #  UDP communication
 #raspberry pi ip address
-UDP_IP="192.168.0.100"
+UDP_IP="192.168.43.12"
 UDP_PORT=5005
 
 """""""""""""""
@@ -124,7 +99,6 @@ PITCH_MAX:x軸方向の最大角度
 PITCH_MIN:x軸方向の最小角度
 ROLL_RIGHT:右に倒した時の最大角度(負の値）
 ROLL_LEFT:左に倒した時の最小角度(正の値）
-
 """""""""""""""
 PITCH_MAX=0.8
 PITCH_MIN=-0.8
@@ -135,19 +109,16 @@ ROLL_LEFT=1.2
 定数定義 LED
 Y_MAX:最大の高さ
 Y_MIN:最小の高さ
-
 LEDの送信デューティー比の最大：254
 LEDの送信デューティー比の最小：0
-
 ('message', '0,0,0,254,254,254,254,254,254,254,254,254,0')
-
 """""""""""""""
 Y_MAX=430
 Y_MIN=40
 
 #test
 
-Mode=2
+Mode=100
 LED_GO=4
 Cycle=200
 Cycle_t=3
@@ -213,13 +184,6 @@ class SampleListener(Leap.Listener):
         elif Mode == 2:
             Led_Menu(LED_GO,frame,hand)
             
-        """  
-        elif Mode == 3:
-
-          
-        elif Mode == 4:
-        """
-        #Motor
         elif Mode == 100:
             for hand in frame.hands:
                 pitch = hand.direction.pitch
@@ -367,8 +331,8 @@ def MoterControl(pitch,roll):
     duty_right=duty(roll)
     #print "右側のデューティー比は{}%".format(duty_right)
     duty_left=100-duty_right
-    speed_right = speed * duty_right *0.01
-    speed_left  = speed * duty_left  *0.01
+    speed_right = ConvertSP2(speed * duty_right *0.01)
+    speed_left  = ConvertSP2(speed * duty_left  *0.01)
     #print "right:{0},left:{1}".format(speed_right,speed_left)
     status=Motor_Status_Convert(speed_right,speed_left)
     Motor_Send(status)
@@ -418,6 +382,13 @@ def ConvertSP(speed):
     speed=-62.5*(speed-PITCH_MAX)
     return speed
 
+def ConvertSP2(speed):
+    #speed range : (0 to 50)
+    #254/50=5.08
+    speed=5.08*speed
+    if speed > 254:
+        speed=254
+    return speed
 
 def duty(roll):
     #右モーター回転率を算出する関数回転率[duty]%
@@ -438,13 +409,13 @@ def ConvertDuty(roll):
     y = (100*x)/(ROLL_LEFT-ROLL_RIGHT)
     return y
  
- def Motor_Status_Convert(right,left):
+def Motor_Status_Convert(right,left):
     for i in range(4):
-        if i%2==0 : status[i] = right
-        if i%2==1 : status[i] = left
+        if i%2==0 : status[i] = int(right)
+        if i%2==1 : status[i] = int(left)
     return status
 
- def Motor_Send(pwm):
+def Motor_Send(pwm):
     #print "pwm={}".format(pwm)
     #LED SEND BEGIN
     pwm_str=map(str,pwm)
@@ -466,7 +437,7 @@ def main():
     v=viewer.viewer()
     v.setDaemon(True)
     v.start()
-
+    #frame=controller.frame()
     pointable = frame.pointables.frontmost
     direction = pointable.direction
     length = pointable.length
