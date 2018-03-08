@@ -33,8 +33,8 @@ def motorM(event):
     def go_check(event):
         shared[1]=100
         print("Mode=",shared[1])
-	
-	global shared
+    
+    global shared
     menu=Tkinter.Tk()
     menu.title(u"Motor menu")
     menu.geometry("200x50")
@@ -76,9 +76,9 @@ def brightnessM(event):
     
     pname=[0 for i in range(9)]
     for n in range (9):
-    	pname[n]=Tkinter.Entry(menu,width=3)
-    	pname[n].insert(Tkinter.END,"0")
-    	pname[n].place(x=10+(n%3)*50, y=50+(n/3)*50)
+        pname[n]=Tkinter.Entry(menu,width=3)
+        pname[n].insert(Tkinter.END,"0")
+        pname[n].place(x=10+(n%3)*50, y=50+(n/3)*50)
 
     check=Tkinter.Button(menu,text=u'OK')
     check.bind("<Button-1>",brightness_check)
@@ -123,58 +123,96 @@ def gestureM(event):
 
 #behavior menu
 def behaviorM(event):
+    global shared
     def behavior_check(event):
-        global shared
-    	def cycle_check(event):
-            shared[2]=int(ce.get())
-            shared[3]=int(brn.get())
-            #tail=int(t,get())
-            print("Cycle=",shared[2]," brightness=",shared[3])
-    	#cycle_check end
+        def cycle_check(event):
+            if ebnum==3:
+                shared[2]=int(ce1.get())
+                shared[3]=int(brn1.get())
+                print("Cycle=",shared[2]," brightness=",shared[3])
+            elif ebnum==4:
+                shared[2]=int(ce2.get())
+                shared[3]=int(brn2.get())
+                print("Cycle=",shared[2]," Cycle Time=",shared[3])
+            elif ebnum==5:
+                shared[3]=int(brn3.get())
+                print("Brightness=",shared[3])
+        #cycle_check end
 
-    	ebnum=int(eb.get())+2
-    	print("ebnum=",ebnum)
-    	if ebnum==3 or ebnum==4:
+        ebnum=int(eb.get())+2
+        print("ebnum=",ebnum)
+        if ebnum==3:
             shared[0]=ebnum
-    	elif ebnum==5:
+            
+            menu1=Tkinter.Tk()
+            menu1.title(u"Set1")
+            menu1.geometry("220x100")
+
+            ce1=Tkinter.Entry(menu1,width=4)
+            ce1.insert(Tkinter.END,"0")
+            ce1.pack()      
+
+            brn1=Tkinter.Entry(menu1,width=3)
+            brn1.insert(Tkinter.END,"0")
+            brn1.pack()
+
+            cet1=Tkinter.Label(menu1,text=u'Cycle(msec)')
+            cet1.place(x=0,y=0)
+
+            brnt1=Tkinter.Label(menu1,text=u'Brightness(0-254)')
+            brnt1.place(x=0,y=20)       
+
+            check1=Tkinter.Button(menu1,text=u'OK')
+            check1.bind("<Button-1>",cycle_check)
+            check1.pack()
+
+        elif ebnum==4:
+            shared[0]=ebnum
+
+            menu2=Tkinter.Tk()
+            menu2.title(u"Set2")
+            menu2.geometry("220x100")
+
+            ce2=Tkinter.Entry(menu2,width=4)
+            ce2.insert(Tkinter.END,"0")
+            ce2.pack()      
+
+            brn2=Tkinter.Entry(menu2,width=4)
+            brn2.insert(Tkinter.END,"0")
+            brn2.pack()
+
+            cet2=Tkinter.Label(menu2,text=u'Cycle(msec)')
+            cet2.place(x=0,y=0)
+
+            brnt2=Tkinter.Label(menu2,text=u'Cycle time(sec)')
+            brnt2.place(x=0,y=20)       
+
+            check2=Tkinter.Button(menu2,text=u'OK')
+            check2.bind("<Button-1>",cycle_check)
+            check2.pack()
+            
+        elif ebnum==5:
             shared[1]=ebnum
 
-            menu=Tkinter.Tk()
-            menu.title(u"Set Cycle")
-            menu.geometry("220x100")
+            menu3=Tkinter.Tk()
+            menu3.title(u"Set3")
+            menu3.geometry("220x100")
 
-            ce=Tkinter.Entry(menu,width=4)
-            ce.insert(Tkinter.END,"0")
-            ce.pack()	    
+            brn3=Tkinter.Entry(menu3,width=3)
+            brn3.insert(Tkinter.END,"0")
+            brn3.pack()      
 
-            brn=Tkinter.Entry(menu,width=3)
-            brn.insert(Tkinter.END,"0")
-            brn.pack()
+            brnt3=Tkinter.Label(menu3,text=u'Brightness(0-254)')
+            brnt3.place(x=0,y=0)     
 
-            cet=Tkinter.Label(menu,text=u'Cycle(msec)')
-            cet.place(x=0,y=0)
-
-            brnt=Tkinter.Label(menu,text=u'brightness(0-254)')
-            brnt.place(x=0,y=20)	    
-
-            """t=Tkinter.Entry(menu)
-            t.insert(Tkinter.END,"0")
-            t.pack()
-
-            tt=Tkinter.Label(menu,text=u'tail(%)')
-            tt.place(x=110,y=60)"""
-
-            check=Tkinter.Button(menu,text=u'OK')
-            check.bind("<Button-1>",cycle_check)
-            check.pack()
+            check3=Tkinter.Button(menu3,text=u'OK')
+            check3.bind("<Button-1>",cycle_check)
+            check3.pack()
         #if end
-
         print("Mode=",shared[1])
-        print("LED_GO=",shared[0])
-        
-           
+        print("LED_GO=",shared[0])           
     #behavior check end
-		        	
+                    
     menu=Tkinter.Tk()
     menu.title(u"behavior menu")
     menu.geometry("200x120")
@@ -281,11 +319,11 @@ def main():
     cnt=0
     global led_status
     while True:
-        led_status=[i*cnt for i in range(9)]
+        """led_status=[i*cnt for i in range(9)]
         cnt+=1
         if cnt>9:
             cnt=0
-        print("main thread")
+        #print("main thread")"""
         time.sleep(0.01)
 if __name__  == '__main__':
     main()
