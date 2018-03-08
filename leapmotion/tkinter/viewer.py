@@ -1,3 +1,4 @@
+#-*- Coding utf-8 -*-
 import threading,time
 import Tkinter
 #when you want to update color of led ,you should change this list like main()
@@ -103,11 +104,46 @@ def gestureM(event):
 #behavior menu
 def behaviorM(event):
     def behavior_check(event):
+    	def cycle_check(event):
+	    Cycle=int(ce.get())
+            Cycle_t=int(ct.get())
+            #tail=int(t,get())
+            print("Cycle=",Cycle," Cycle_t=",Cycle_t," tail=",tail)
+    	
         LED_GO=int(eb.get())
         print("LED_GO=",LED_GO)
         if LED_GO==2 or LED_GO==3:
-        	cycleM()
-        	
+        
+            menu=Tkinter.Tk()
+            menu.title(u"Set Cycle")
+            menu.geometry("200x200")
+
+            ce=Tkinter.Entry(menu,width=4)
+            ce.insert(Tkinter.END,"0")
+            ce.pack()	    
+
+            ct=Tkinter.Entry(menu,width=4)
+            ct.insert(Tkinter.END,"0")
+            ct.pack()
+
+            cet=Tkinter.Label(menu,text=u'Cycle(msec)')
+            cet.place(x=110,y=0)
+
+            ctt=Tkinter.Label(menu,text=u'Cycle(msec)')
+            ctt.place(x=110,y=30)	    
+
+            """t=Tkinter.Entry(menu)
+            t.insert(Tkinter.END,"0")
+            t.pack()
+
+            tt=Tkinter.Label(menu,text=u'tail(%)')
+            tt.place(x=110,y=60)"""
+
+            check=Tkinter.Button(menu,text=u'OK')
+            check.bind("<Button-1>",cycle_check)
+            check.pack()
+        #behavior check end
+		        	
     menu=Tkinter.Tk()
     menu.title(u"behavior menu")
     menu.geometry("200x200")
@@ -130,40 +166,7 @@ def behaviorM(event):
     check.place(x=125,y=0)
 
 def cycleM(event):
-	def cycle_check(event):
-		Cycle=int(ce.get())
-		Cycle_t=int(ct.get())
-		tail=int(t,get())
-		print("Cycle=",Cycle," Cycle_t=",Cycle_t," tail=",tail)
-
-	menu=Tkinter.Tk()
-	menu.title(u"Set Cycle")
-	menu.geometry("200x200")
-
-	ce=Tkinter.Entry(menu)
-	ce.insert(Tkinter.END,"0")
-	ce.pack()
-
-	cet=Tkinter.Label(menu,text=u'Cycle(msec)')
-	cet.place(x=110,y=0)
-
-	ct=Tkinter.Entry(menu)
-	ct.insert(Tkinter.END,"0")
-	ct.pack()
-
-	ctt.Tkinter.Label(menu,text=u'Cycle time(sec)')
-	ctt.place(x=110,y=30)
-
-	t=Tkinter.Entry(menu)
-	t.insert(Tkinter.END,"0")
-	t.pack()
-
-	tt=Tkinter.Label(menu,text=u'tail(%)')
-	tt.place(x=110,y=60)
-
-	check=Tkinter.Button(menu,text=u'OK')
-	check.bind("<Button-1",cycle_check)
-	check.pack()
+    pass
 
 
 #koki end  
