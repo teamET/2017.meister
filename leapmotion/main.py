@@ -79,10 +79,10 @@ import viewer
 from viewer import led_status
 from viewer import shared
 
-LED_GO  = shared[0]
-Mode    = shared[1]
-Cycle   = shared[2]
-Cycle_t = shared[3] #changed variable name
+LED_GO  = int(shared[0])
+Mode    = int(shared[1])
+Cycle   = int(shared[2])
+Cycle_t = int(shared[3]) #changed variable name
 
 print(id(LED_GO))
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
@@ -97,7 +97,7 @@ sys.path.insert(0, lib_dir)
 import socket,json
 #  UDP communication
 #raspberry pi ip address
-UDP_IP="192.168.43.12"
+UDP_IP="192.168.0.100"
 UDP_PORT=5005
 
 """""""""""""""
@@ -165,14 +165,22 @@ class SampleListener(Leap.Listener):
         frame=controller.frame()
         hand = frame.hands.rightmost
         finger=frame.finger
-
+        
         #tkinter Global
         global led_status
-        global Mode
+        global shared
+        #global Mode
+        LED_GO  = int(shared[0])
+        Mode    = int(shared[1])
+        Cycle   = int(shared[2])
+        Cycle_t = int(shared[3])
+        print ('############main Mode222222222',Mode,id(Mode))
         global status
+        """
         global Cycle
         global Cycle_t
         global tail
+        """
         #leap Global
         global pwm
         
@@ -182,7 +190,7 @@ class SampleListener(Leap.Listener):
         """
         frame,hand
         """
-        print ('############main Mode222222222',Mode,id(Mode),id(viewer.Mode))
+        
 
         #LED
         if   Mode == 1:
@@ -226,8 +234,12 @@ def init_pwm(pwm):
 
 def Led_Menu(LED_GO,frame,hand):
     global pwm
-    global Cycle
-    global Cycle_t
+    global shared
+    #global Mode
+    LED_GO  = int(shared[0])
+    Mode    = int(shared[1])
+    Cycle   = int(shared[2])
+    Cycle_t = int(shared[3])
     global led_status
     if Mode == 1:
         if LED_GO == 3:
