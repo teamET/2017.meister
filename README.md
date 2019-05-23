@@ -14,5 +14,6 @@ teamet@JETxx:$cd 2017.meister/leapmotion
 python3 main.py
 ```
 
-仕様等はwikiを参照
+仕様等は以下を参照
+
 https://github.com/teamET/2017.meister/wiki
